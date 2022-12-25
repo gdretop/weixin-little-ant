@@ -125,7 +125,7 @@
         </plugins>
         <resources>
             <resource>
-                <directory>java/weixin-little-ant-web/src/main/resources</directory>
+                <directory>java/little-ant-web/src/main/resources</directory>
                 <includes>
                     <include>**/*.*</include>
                 </includes>
