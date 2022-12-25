@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {"com.ant.little"})
 @MapperScan(basePackages = {"com.ant.little.core.dao"})
-public class WxCloudRunApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(WxCloudRunApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }

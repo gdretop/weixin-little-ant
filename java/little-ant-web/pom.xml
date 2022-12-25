@@ -57,18 +57,22 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.5</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <outputDirectory>../../target</outputDirectory>
+                    <classifier>executable</classifier>
+                    <!--                    <mainClass>com.ant.little.web.Application</mainClass>-->
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
             <resource>
-                <directory>java/little-ant-web/src/main/resources</directory>
+                <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.*</include>
                 </includes>
