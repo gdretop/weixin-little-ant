@@ -35,7 +35,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 # 将构建产物jar包拷贝到运行时目录中
-COPY --from=build /app/target/*.jar .
+COPY --from=build /app/java/little-ant-web/target/*.jar .
 
 # 暴露端口
 # 此处端口必须与「服务设置」-「流水线」以及「手动上传代码包」部署时填写的端口一致，否则会部署失败。
