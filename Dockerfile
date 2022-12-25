@@ -17,7 +17,7 @@ RUN mvn -s /app/settings.xml -f /app/pom.xml clean package
 
 # 选择运行时基础镜像
 #FROM alpine:3.13
-FROM gdrtop/alpine_gd:basic1.0_221225
+FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic
 # 容器默认时区为UTC，如需使用上海时间请启用以下时区设置命令
 # RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 
@@ -35,7 +35,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 # 将构建产物jar包拷贝到运行时目录中
-COPY --from=build /app/java/little-ant-web/target/*.jar .
+COPY --from=build /app/java/little-ant-web/target/*.jar /home/root/
 
 # 暴露端口
 # 此处端口必须与「服务设置」-「流水线」以及「手动上传代码包」部署时填写的端口一致，否则会部署失败。
@@ -44,4 +44,4 @@ EXPOSE 80
 # 执行启动命令.
 # 写多行独立的CMD命令是错误写法！只有最后一行CMD命令会被执行，之前的都会被忽略，导致业务报错。
 # 请参考[Docker官方文档之CMD命令](https://docs.docker.com/engine/reference/builder/#cmd)
-CMD ["java", "-jar", "/app/springboot-wxcloudrun-1.0.jar"]
+CMD ["java", "-jar", "/home/root/little-ant-web-1.0-SNAPSHOT.jar"]
