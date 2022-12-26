@@ -14,12 +14,15 @@ public class EnvConfig {
     Logger logger = LoggerFactory.getLogger(EnvConfig.class);
     @Value(value = "${CUR_ENV}")
     private String curEnv;
+    @Value(value = "${app.dir.log}")
+    private String appDirLog;
     @Autowired
     private Environment environment;
 
     @PostConstruct
     public void output() {
         logger.info("环境变量CUR_ENV:{}", this.curEnv);
+        logger.info("环境变量appDirLog:{}", this.appDirLog);
     }
 
     public String getCurEnv() {

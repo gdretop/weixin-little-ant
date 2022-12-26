@@ -40,10 +40,34 @@ public class TestController {
             map.put(key, value);
         }
         logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
+        logger.info("header信息: {}", map);
+        logger.info("输入信息: {}", requestMap);
         Map<String, Object> response = new HashMap<>();
         response.put("header", map);
         response.put("body", requestMap);
         return ApiResponse.ok(response);
+    }
+
+    @PostMapping(value = "/received")
+    @ResponseBody
+    public Map<String, Object> received(@RequestBody Map<String, Object> requestMap) {
+//        x-wx-openid
+//        x-wx-source
+//        x-real-ip
+//        x-wx-appid
+        httpServletRequest.getHeaderNames();
+        Map<String, String> map = new HashMap<String, String>();
+        Enumeration headerNames = httpServletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = httpServletRequest.getHeader(key);
+            map.put(key, value);
+        }
+        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
+        logger.info("header信息: {}", map);
+        logger.info("输入信息: {}", requestMap);
+        requestMap.put("header", map);
+        return requestMap;
     }
 
 }
