@@ -71,4 +71,31 @@ public class TestController {
         return requestMap;
     }
 
+    @PostMapping(value = "/answer")
+    @ResponseBody
+    public Map<String, Object> answer(@RequestBody Map<String, Object> requestMap) {
+//        ToUserName: FromUserName,
+//                FromUserName: ToUserName,
+//                CreateTime: CreateTime,
+//                MsgType: 'text',
+//                Content: '这是回复的消息'
+        httpServletRequest.getHeaderNames();
+        Map<String, String> map = new HashMap<String, String>();
+        Enumeration headerNames = httpServletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = httpServletRequest.getHeader(key);
+            map.put(key, value);
+        }
+        Object ToUserName = requestMap.get("ToUserName");
+        Object FromUserName = requestMap.get("FromUserName");
+        requestMap.put("FromUserName", FromUserName);
+        requestMap.put("ToUserName", ToUserName);
+        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
+        logger.info("header信息: {}", JSON.toJSONString(map));
+        logger.info("输入信息: {}", JSON.toJSONString(requestMap));
+//        requestMap.put("header", map);
+        return requestMap;
+    }
+
 }
