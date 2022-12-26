@@ -89,8 +89,8 @@ public class TestController {
         }
         Object ToUserName = requestMap.get("ToUserName");
         Object FromUserName = requestMap.get("FromUserName");
-        requestMap.put("FromUserName", FromUserName);
-        requestMap.put("ToUserName", ToUserName);
+        requestMap.put("FromUserName", ToUserName);
+        requestMap.put("ToUserName", FromUserName);
         logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
         logger.info("header信息: {}", JSON.toJSONString(map));
         logger.info("输入信息: {}", JSON.toJSONString(requestMap));
