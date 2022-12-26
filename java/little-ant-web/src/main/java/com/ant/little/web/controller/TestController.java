@@ -27,7 +27,10 @@ public class TestController {
     @PostMapping(value = "/output")
     @ResponseBody
     public ApiResponse output(@RequestBody Map<String, Object> requestMap) {
-
+//        x-wx-openid
+//        x-wx-source
+//        x-real-ip
+//        x-wx-appid
         httpServletRequest.getHeaderNames();
         Map<String, String> map = new HashMap<String, String>();
         Enumeration headerNames = httpServletRequest.getHeaderNames();

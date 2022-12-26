@@ -31,7 +31,7 @@ FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic
 #    && rm -f /var/cache/apk/*
 
 # 指定运行时的工作目录
-RUN mkdir -p /app
+RUN mkdir -p /app && mkdir -p /home/root/logs
 WORKDIR /app
 
 # 将构建产物jar包拷贝到运行时目录中
