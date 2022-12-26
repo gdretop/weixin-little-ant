@@ -4,14 +4,14 @@ app:
   dir:
     log: /home/root/logs
 # 日志配置
-logging:
-  #日志文件
-  file:
-    #使用相对路径,就会在项目根目录下生成一个info.log文件
-    name: ${app.dir.log}/little-ant.log
-  #日志级别 root表示所有包，也可以单独配置具体包 fatal error warn info debug trace off
-  level:
-    root: info
+#logging:
+#  #日志文件
+#  file:
+#    #使用相对路径,就会在项目根目录下生成一个info.log文件
+#    name: ${app.dir.log}/little-ant.log
+#  #日志级别 root表示所有包，也可以单独配置具体包 fatal error warn info debug trace off
+#  level:
+#    root: info
 
 spring:
   datasource:
