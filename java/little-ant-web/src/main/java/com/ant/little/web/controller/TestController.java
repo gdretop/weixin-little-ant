@@ -1,5 +1,6 @@
 package com.ant.little.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ant.little.web.config.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,8 @@ public class TestController {
             map.put(key, value);
         }
         logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
-        logger.info("header信息: {}", map);
-        logger.info("输入信息: {}", requestMap);
+        logger.info("header信息: {}", JSON.toJSONString(map));
+        logger.info("输入信息: {}", JSON.toJSONString(requestMap));
         Map<String, Object> response = new HashMap<>();
         response.put("header", map);
         response.put("body", requestMap);
@@ -64,8 +65,8 @@ public class TestController {
             map.put(key, value);
         }
         logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
-        logger.info("header信息: {}", map);
-        logger.info("输入信息: {}", requestMap);
+        logger.info("header信息: {}", JSON.toJSONString(map));
+        logger.info("输入信息: {}", JSON.toJSONString(requestMap));
 //        requestMap.put("header", map);
         return requestMap;
     }
