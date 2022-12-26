@@ -1,6 +1,6 @@
 package com.ant.little.service;
 
-import com.ant.little.model.model.Counter;
+import com.ant.little.core.domain.Counter;
 
 import java.util.Optional;
 

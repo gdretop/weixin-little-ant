@@ -1,4 +1,4 @@
-package com.ant.little.model.model;
+package com.ant.little.core.domain;
 
 import lombok.Data;
 

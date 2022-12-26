@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ant.little.core.dao.CountersMapper">
 
-    <resultMap id="countersMapper" type="com.ant.little.model.model.Counter">
+    <resultMap id="countersMapper" type="com.ant.little.core.domain.Counter">
         <id property="id" column="id"/>
         <result property="count" column="count"/>
         <result property="createdAt" column="createdAt" javaType="java.time.LocalDateTime" />
@@ -22,7 +22,7 @@
         limit 1
     </delete>
 
-    <update id="upsertCount" parameterType="com.ant.little.model.model.Counter">
+    <update id="upsertCount" parameterType="com.ant.little.core.domain.Counter">
         INSERT INTO `Counters`(`id`, `count`)
         VALUE(#{id}, #{count}) 
         ON DUPLICATE KEY UPDATE count=#{count}

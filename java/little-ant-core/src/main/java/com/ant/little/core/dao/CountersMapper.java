@@ -1,6 +1,6 @@
 package com.ant.little.core.dao;
 
-import com.ant.little.model.model.Counter;
+import com.ant.little.core.domain.Counter;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

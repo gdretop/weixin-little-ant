@@ -1,7 +1,7 @@
 package com.ant.little.service.impl;
 
 import com.ant.little.core.dao.CountersMapper;
-import com.ant.little.model.model.Counter;
+import com.ant.little.core.domain.Counter;
 import com.ant.little.service.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
