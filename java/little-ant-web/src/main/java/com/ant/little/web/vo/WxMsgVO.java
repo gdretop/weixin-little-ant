@@ -12,6 +12,7 @@ public class WxMsgVO {
     public long CreateTime;
     public String MsgType;
     public String Content;
+    public long MsgId;
 
     public WxMsgVO transDirection() {
         WxMsgVO wxMsgVO = new WxMsgVO();
@@ -20,6 +21,7 @@ public class WxMsgVO {
         wxMsgVO.CreateTime = this.CreateTime;
         wxMsgVO.MsgType = this.MsgType;
         wxMsgVO.Content = this.Content;
+        wxMsgVO.MsgId = this.MsgId;
         return wxMsgVO;
     }
 

@@ -40,7 +40,7 @@ public class TestController {
             String value = httpServletRequest.getHeader(key);
             map.put(key, value);
         }
-        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
+        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-from-openid"), map.get("x-wx-source"), requestMap);
         logger.info("header信息: {}", JSON.toJSONString(map));
         logger.info("输入信息: {}", JSON.toJSONString(requestMap));
         Map<String, Object> response = new HashMap<>();
@@ -64,7 +64,7 @@ public class TestController {
             String value = httpServletRequest.getHeader(key);
             map.put(key, value);
         }
-        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
+        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-from-openid"), map.get("x-wx-source"), requestMap);
         logger.info("header信息: {}", JSON.toJSONString(map));
         logger.info("输入信息: {}", JSON.toJSONString(requestMap));
 //        requestMap.put("header", map);
@@ -91,7 +91,7 @@ public class TestController {
         Object FromUserName = requestMap.get("FromUserName");
         requestMap.put("FromUserName", ToUserName);
         requestMap.put("ToUserName", FromUserName);
-        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-openid"), map.get("x-wx-source"), requestMap);
+        logger.info("接收到测试请求:openId:{} source:{} data:{}", map.get("x-wx-from-openid"), map.get("x-wx-source"), requestMap);
         logger.info("header信息: {}", JSON.toJSONString(map));
         logger.info("输入信息: {}", JSON.toJSONString(requestMap));
 //        requestMap.put("header", map);

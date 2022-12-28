@@ -16,13 +16,23 @@ public class WxSubMsgDTO {
     private String wxSource;
     private String realIp;
     private String wxAppid;
+    private long msgId;
 
     public WxSubMsgResponseDTO toResponse() {
         WxSubMsgResponseDTO wxSubMsgResponseDTO = new WxSubMsgResponseDTO();
         wxSubMsgResponseDTO.setToUserName(this.getFromUserName());
         wxSubMsgResponseDTO.setFromUserName(this.getToUserName());
         wxSubMsgResponseDTO.setCreateTime(this.getCreateTime());
+        wxSubMsgResponseDTO.setMsgId(this.getMsgId());
         return wxSubMsgResponseDTO;
+    }
+
+    public long getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(long msgId) {
+        this.msgId = msgId;
     }
 
     public String getToUserName() {

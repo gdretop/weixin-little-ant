@@ -12,6 +12,7 @@ public class WxSubMsgResponseDTO {
     private long createTime;
     private String msgType;
     private String content;
+    private long msgId;
 
     public String getToUserName() {
         return toUserName;
@@ -51,5 +52,13 @@ public class WxSubMsgResponseDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public long getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(long msgId) {
+        this.msgId = msgId;
     }
 }

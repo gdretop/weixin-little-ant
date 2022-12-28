@@ -42,7 +42,7 @@ public class WxSubscribeController {
             wxSubMsgDTO.setCreateTime(wxMsgVO.CreateTime);
             wxSubMsgDTO.setMsgType(wxMsgVO.MsgType);
             wxSubMsgDTO.setContent(wxMsgVO.Content);
-            wxSubMsgDTO.setWxOpenId(httpServletRequest.getHeader("x-wx-openid"));
+            wxSubMsgDTO.setWxOpenId(httpServletRequest.getHeader("x-wx-from-openid"));
             wxSubMsgDTO.setWxSource(httpServletRequest.getHeader("x-wx-source"));
             wxSubMsgDTO.setRealIp(httpServletRequest.getHeader("x-real-ip"));
             wxSubMsgDTO.setWxAppid(httpServletRequest.getHeader("x-wx-appid"));
@@ -72,6 +72,7 @@ public class WxSubscribeController {
         wxMsgVO.CreateTime = wxSubMsgResponseDTO.getCreateTime();
         wxMsgVO.MsgType = wxSubMsgResponseDTO.getMsgType();
         wxMsgVO.Content = wxSubMsgResponseDTO.getContent();
+        wxMsgVO.MsgId = wxSubMsgResponseDTO.getMsgId();
         return wxMsgVO;
     }
 }
