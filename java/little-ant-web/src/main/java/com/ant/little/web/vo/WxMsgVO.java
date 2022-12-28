@@ -16,8 +16,8 @@ public class WxMsgVO {
 
     public WxMsgVO transDirection() {
         WxMsgVO wxMsgVO = new WxMsgVO();
-        wxMsgVO.ToUserName = this.ToUserName;
-        wxMsgVO.FromUserName = this.FromUserName;
+        wxMsgVO.ToUserName = this.FromUserName;
+        wxMsgVO.FromUserName = this.ToUserName;
         wxMsgVO.CreateTime = this.CreateTime;
         wxMsgVO.MsgType = this.MsgType;
         wxMsgVO.Content = this.Content;
