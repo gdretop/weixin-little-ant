@@ -181,16 +181,16 @@ def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, 
         msg = ""
         if cur_p.x == pre_p.x:
             if cur_p.y > pre_p.y:
-                msg = ("第{}次: 向下走{}步到达位置({},{})".format(step, cur_p.y - pre_p.y, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次: 向下走{}步到达({},{})".format(step, cur_p.y - pre_p.y, cur_p.x + 1, cur_p.y + 1))
             if cur_p.y < pre_p.y:
-                msg = ("第{}次: 向上走{}步到达位置({},{})".format(step, pre_p.y - cur_p.y, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次: 向上走{}步到达({},{})".format(step, pre_p.y - cur_p.y, cur_p.x + 1, cur_p.y + 1))
         if cur_p.y == pre_p.y:
             if cur_p.x > pre_p.x:
-                msg = ("第{}次: 向右走{}步到达位置({},{})".format(step, cur_p.x - pre_p.x, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次: 向右走{}步到达({},{})".format(step, cur_p.x - pre_p.x, cur_p.x + 1, cur_p.y + 1))
             if cur_p.x < pre_p.x:
-                msg = ("第{}次: 向左走{}步到达位置({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次: 向左走{}步到达({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
         if way_buildings:
-            msg = msg + ", 路上经过{}".format(str(way_buildings))
+            msg = msg + "\n路上经过{}".format(str(way_buildings))
         print(msg)
         step += 1
 
