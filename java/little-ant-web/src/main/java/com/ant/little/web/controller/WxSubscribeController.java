@@ -35,6 +35,7 @@ public class WxSubscribeController {
     @PostMapping(value = "/answer")
     @ResponseBody
     public WxMsgVO answer(@RequestBody WxMsgVO wxMsgVO) {
+        long startTime = System.currentTimeMillis();
         WxSubMsgDTO wxSubMsgDTO = new WxSubMsgDTO();
         try {
             wxSubMsgDTO.setToUserName(wxMsgVO.ToUserName);
@@ -62,6 +63,9 @@ public class WxSubscribeController {
             response.MsgType = WxMsgTypeEnum.TEXT.getName();
             response.Content = ResponseTemplateConstants.SERVER_ERROR;
             return response;
+        } finally {
+            long endTime = System.currentTimeMillis();
+            logger.info("此次执行消耗时间: {}", endTime - startTime);
         }
     }
 

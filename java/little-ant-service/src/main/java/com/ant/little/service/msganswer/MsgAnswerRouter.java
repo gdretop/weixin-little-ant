@@ -69,7 +69,8 @@ public class MsgAnswerRouter {
             return responseAnswer;
         } finally {
             try {
-                requestLogDTO.setResponseInfo(JSON.toJSONString(requestLogDTO));
+                logger.info("保存记录日志");
+                requestLogDTO.setResponseInfo(JSON.toJSONString(responseAnswer));
                 requestLogService.insert(requestLogDTO);
             } catch (Exception e) {
                 logger.error("保存日志信息失败 {} {}", JSON.toJSONString(requestLogDTO), e, e);
