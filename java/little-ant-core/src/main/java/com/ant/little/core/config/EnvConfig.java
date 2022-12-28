@@ -16,6 +16,10 @@ public class EnvConfig {
     private String curEnv;
     @Value(value = "${app.dir.log}")
     private String appDirLog;
+    @Value(value = "${PYTHON_CODE_DIR}")
+    private String pythonCodeDir;
+    @Value(value = "${PYTHON_INC}")
+    private String pythonInc;
     @Autowired
     private Environment environment;
 
@@ -27,5 +31,13 @@ public class EnvConfig {
 
     public String getCurEnv() {
         return curEnv;
+    }
+
+    public String getPythonCodeDir() {
+        return pythonCodeDir;
+    }
+
+    public String getPythonInc() {
+        return pythonInc;
     }
 }

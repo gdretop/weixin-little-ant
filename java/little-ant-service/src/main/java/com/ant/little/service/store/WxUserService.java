@@ -1,4 +1,4 @@
-package com.ant.little.service;
+package com.ant.little.service.store;
 
 import com.alibaba.fastjson.JSON;
 import com.ant.little.common.model.Response;
@@ -10,8 +10,10 @@ import com.ant.little.model.dto.WxUserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,9 +22,10 @@ import java.util.List;
  * @date: 2022/12/26
  * @Version 1.0
  **/
+@Service
 public class WxUserService {
     private Logger logger = LoggerFactory.getLogger(WxUserService.class);
-    @Autowired
+    @Resource
     private WxUserDOMapper wxUserDOMapper;
     @Autowired
     private EnvConfig envConfig;
@@ -47,7 +50,6 @@ public class WxUserService {
         } else {
             WxUserDO wxUserDO = dto2DO(wxUserDTO);
             int effect = wxUserDOMapper.insertSelective(wxUserDO);
-            wxUserDTO.setId(wxUserDO.getId());
             if (effect == 1) {
                 return Response.newSuccess(wxUserDTO);
             } else {

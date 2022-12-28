@@ -1,8 +1,8 @@
 package com.ant.little.web.controller;
 
+import com.ant.little.core.domain.Counter;
 import com.ant.little.model.dto.CounterRequest;
-import com.ant.little.model.model.Counter;
-import com.ant.little.service.CounterService;
+import com.ant.little.service.store.CounterService;
 import com.ant.little.web.config.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

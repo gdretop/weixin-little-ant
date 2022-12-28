@@ -1,4 +1,4 @@
-package com.ant.little.service;
+package com.ant.little.service.store;
 
 import com.ant.little.core.domain.Counter;
 

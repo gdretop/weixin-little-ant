@@ -34,6 +34,7 @@ public class RuntimeUtil {
         Thread inputThread = null;
         try {
             CountDownLatch latch = new CountDownLatch(2);
+            logger.info("执行指令: {}", command);
             proc = Runtime.getRuntime().exec(command);
             List<String> errorInfo = new ArrayList<>();
             List<String> inputInfo = new ArrayList<>();

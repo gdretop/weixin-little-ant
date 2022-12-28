@@ -22,6 +22,10 @@ public class Response<T> {
         this.success = false;
     }
 
+    public boolean isFailed() {
+        return !success;
+    }
+
     public static <D> Response<D> newSuccess(D data) {
         return new Response<D>(data);
     }

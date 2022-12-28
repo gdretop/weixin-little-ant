@@ -1,4 +1,4 @@
-package com.ant.little.service;
+package com.ant.little.service.store;
 
 import com.alibaba.fastjson.JSON;
 import com.ant.little.common.model.Response;
@@ -9,6 +9,7 @@ import com.ant.little.model.dto.RequestLogDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author: little-ant
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date: 2022/12/26
  * @Version 1.0
  **/
+@Service
 public class RequestLogService {
     private Logger logger = LoggerFactory.getLogger(RequestLogService.class);
     @Autowired
@@ -28,7 +30,6 @@ public class RequestLogService {
         requestLogDTO.setEnv(env);
         RequestLogDO requestLogDO = dto2DO(requestLogDTO);
         int effect = requestLogDOMapper.insertSelective(requestLogDO);
-        requestLogDTO.setId(requestLogDO.getId());
         if (effect == 1) {
             return Response.newSuccess(requestLogDTO);
         } else {
@@ -45,5 +46,17 @@ public class RequestLogService {
         requestLogDO.setRequestInfo(requestLogDTO.getRequestInfo());
         requestLogDO.setResponseInfo(requestLogDTO.getResponseInfo());
         return requestLogDO;
+    }
+
+    public Response<RequestLogDTO> update(RequestLogDTO requestLogDTO) {
+        RequestLogDO requestLogDO = dto2DO(requestLogDTO);
+        int effect = requestLogDOMapper.updateByPrimaryKey(requestLogDO);
+        requestLogDTO.setId(requestLogDO.getId());
+        if (effect == 1) {
+            return Response.newSuccess(requestLogDTO);
+        } else {
+            logger.error("更新信息失败 {}", JSON.toJSONString(requestLogDTO));
+            return Response.newFailure("更新失败", "");
+        }
     }
 }
