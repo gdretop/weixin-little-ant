@@ -12,6 +12,8 @@ import com.ant.little.core.config.EnvConfig;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author: little-ant
@@ -32,6 +35,12 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
     private final Logger logger = LoggerFactory.getLogger(MoriGameFindPathAnswerService.class);
     @Autowired
     private EnvConfig envConfig;
+    private Cache<String, String> localCache = CacheBuilder.newBuilder()
+            .concurrencyLevel(4)
+            .initialCapacity(100)
+            .expireAfterWrite(3, TimeUnit.DAYS)
+            .maximumSize(5000)
+            .build();
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {
@@ -68,6 +77,14 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
         String content = wxSubMsgDTO.getContent();
         content = content.substring("最短路径\n".length());
         content = content.replace('\n', '#');
+        String cacheResult = localCache.getIfPresent(content);
+        if (cacheResult != null) {
+            logger.info("找到缓存信息");
+            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
+            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+            wxSubMsgResponseDTO.setContent(cacheResult);
+            return Response.newSuccess(wxSubMsgResponseDTO);
+        }
         String command = String.format("%s %s/mori_map_find_path_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
         Response<List<String>> response = RuntimeUtil.synCall(command);
         if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
@@ -81,6 +98,7 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
             wxSubMsgResponseDTO.setContent(runTimeResponse.getResultString());
+            localCache.put(content, runTimeResponse.getResultString());
             return Response.newSuccess(wxSubMsgResponseDTO);
         }
         return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");

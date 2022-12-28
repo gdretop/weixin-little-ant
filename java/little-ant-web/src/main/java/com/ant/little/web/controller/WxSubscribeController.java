@@ -43,6 +43,7 @@ public class WxSubscribeController {
             wxSubMsgDTO.setCreateTime(wxMsgVO.CreateTime);
             wxSubMsgDTO.setMsgType(wxMsgVO.MsgType);
             wxSubMsgDTO.setContent(wxMsgVO.Content);
+            wxSubMsgDTO.setMsgId(wxMsgVO.MsgId);
             wxSubMsgDTO.setWxOpenId(httpServletRequest.getHeader("x-wx-from-openid"));
             wxSubMsgDTO.setWxSource(httpServletRequest.getHeader("x-wx-source"));
             wxSubMsgDTO.setRealIp(httpServletRequest.getHeader("x-real-ip"));
