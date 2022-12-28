@@ -39,10 +39,10 @@ type_map = {
     'A219FF': 13,
 }
 # https://www.cnblogs.com/zxt518/p/15430700.html excel 操作
-dir = '/Users/yuwanglin/project/media_process/python/manual_test/地图处理/'
+dir = '/Users/yuwanglin/project/weixin-little-ant/python/manual_test/地图处理/'
 file_path = dir + '生存之路6.0.1.1.xlsx'
-output_path = dir + '生存之路点图.png'
-output_gray_path = dir + '生存之路点图gray.png'
+output_path = dir + 'mori_game_map.png'
+output_gray_path = dir + 'mori_game_map_gray.png'
 
 
 def trans_excel_2_png():

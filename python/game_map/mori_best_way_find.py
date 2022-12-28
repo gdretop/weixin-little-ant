@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os
 from queue import Queue
 
 import cv2
 
 from common.algorithm import STRICT_DIRECTION
-from common.image_tool import show_img
 from common.math_tool import Point
 from config.mori_map_config import SCALE_SIZE
 
@@ -172,7 +172,8 @@ def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, 
             path.append(point)
             break
     target_cell = result_map[target_p.y][target_p.x]
-    print("\n从当前点{},{}出发,需要走{}步,经过建筑{}".format(path[0].x + 1, path[0].y + 1, target_cell[0], target_cell[1]))
+    response_info = []
+    response_info.append("从当前点{},{}出发,需要走{}步,可经过建筑{}".format(path[0].x + 1, path[0].y + 1, target_cell[0], target_cell[1]))
     step = 1
     for i in range(1, len(path)):
         cur_p = path[i]
@@ -191,20 +192,53 @@ def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, 
                 msg = ("第{}次: 向左走{}步到达位置({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
         if way_buildings:
             msg = msg + ", 路上经过{}".format(str(way_buildings))
-        print(msg)
+        response_info.append(msg)
         step += 1
+    return response_info
 
 
-def find_nearest_way(points):
+def init(points):
     for point in points:
         point.x = point.x - 1
         point.y = point.y - 1
-    dir = '/Users/yuwanglin/project/media_process/python/manual_test/地图处理/'
-    output_path = dir + '生存之路点图gray.png'
+    # dir = '/Users/yuwanglin/project/weixin-little-ant/python/game_map/'
+    dir = os.path.dirname(__file__)
+    output_path = dir + os.sep + 'mori_game_map_gray.png'
     image = cv2.imread(output_path, cv2.IMREAD_GRAYSCALE)
     for i in range(301):
         for j in range(301):
             image[i][j] = image[i][j] / SCALE_SIZE
+    return points, image
+
+
+def count_best_way(points=[]):
+    points, image = init(points)
+    result_map_list = []
+    for index, point in enumerate(points):
+        result_map = bfs(image, point, 301, 301)
+        result_map_list.append(result_map)
+    resposne_info = []
+    for i in range(1, len(points)):
+        location_info = result_map_list[0][points[i].y][points[i].x]
+        resposne_info.append("从起点到点{}({}),最短距离{},最多可经过建筑{}".format(i, points[i].print_location(), location_info[0], location_info[1]))
+    resposne_info.append('')
+    find_best_way(result_map_list, points, [points[0]])
+    global best_result
+    resposne_info.append("最佳路线最少需要{}步,经过{}个建筑物,顺序如下".format(best_result['steps'], best_result['buildings']))
+    for p in best_result['point_way']:
+        resposne_info.append("点{} 坐标{}".format(p.id, p.print_location()))
+    return resposne_info
+
+
+def find_path(points):
+    points, image = init(points)
+    result_map = bfs(image, points[0], 301, 301)
+    response_info = get_the_way_between_2_point(image, result_map, points[0].copy(), points[1].copy(), 301, 301)
+    return response_info
+
+
+def find_nearest_way(points):
+    points, image = init(points)
     result_map_list = []
     for index, point in enumerate(points):
         result_map = bfs(image, point, 301, 301)
@@ -217,26 +251,35 @@ def find_nearest_way(points):
     global best_result
     print("\n {}".format(str(best_result)))
     for i in range(1, len(points)):
-        get_the_way_between_2_point(image, result_map_list[0], points[0].copy(), points[i].copy(), 301, 301)
+        response_info = get_the_way_between_2_point(image, result_map_list[0], points[0].copy(), points[i].copy(), 301, 301)
+        print('\n'.join(response_info))
     # cv2.imshow('x', image)
 
 
-# 测试
-points = [
-    Point(x=160, y=152, id=0),
-    Point(x=90, y=132, id=1),
-    Point(x=176, y=31, id=2),
-    Point(x=171, y=265, id=3)
-]
+if __name__ == '__main__':
+    # 测试
+    points1 = [
+        Point(x=160, y=152, id=0),
+        Point(x=90, y=132, id=1),
+        Point(x=176, y=31, id=2),
+        Point(x=171, y=265, id=3)
+    ]
 
-points = [
-    # Point(x=130, y=147, id=0),
-    # Point(x=100, y=129, id=1),
-    # Point(x=148, y=82, id=1), # 12.24坐标
-    # Point(x=176, y=31, id=0),
-    # Point(x=180, y=38, id=0), #12.25
-    Point(x=160, y=128, id=0), #12.26
-    Point(x=171, y=265, id=1)
-]
-find_nearest_way(points)
-# show_img(image)
+    points2 = [
+        # Point(x=130, y=147, id=0),
+        # Point(x=100, y=129, id=1),
+        # Point(x=148, y=82, id=1), # 12.24坐标
+        # Point(x=176, y=31, id=0),
+        # Point(x=180, y=38, id=0), #12.25
+        # Point(x=161, y=117, id=0),  # 12.26
+        Point(x=173, y=197, id=0),  # 12.27
+        # Point(x=175, y=265, id=0),  # 12.28
+        Point(x=171, y=265, id=1)
+    ]
+    # find_nearest_way(points)
+    result = count_best_way(points1)
+    print('\n'.join(result))
+    print('\n')
+    result = find_path(points2)
+    print('\n'.join(result))
+    # show_img(image)

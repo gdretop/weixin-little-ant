@@ -24,6 +24,9 @@ class Point:
             return True
         return False
 
+    def print_location(self):
+        return "{}, {}".format(self.x, self.y)
+
     def __str__(self):
         str = "[x={}, y={}".format(self.x, self.y)
         if self.id is not None:
