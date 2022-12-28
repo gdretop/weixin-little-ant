@@ -44,9 +44,22 @@ type_map = {
 
 }
 
+global_result_map = None
+
 
 def bfs(map, point, row_n, column_n, points):
-    result_map = [[[-1, 0] for j in range(column_n)] for i in range(row_n)]
+    global global_result_map
+    result_map = None
+    if global_result_map is None:
+        global_result_map = [[[-1, 0] for j in range(column_n)] for i in range(row_n)]
+        result_map = global_result_map
+    else:
+        result_map = global_result_map
+        for i in range(row_n):
+            for j in range(column_n):
+                result_map[i][j][0] = -1
+                result_map[i][j][1] = 0
+
     target = [p.x * 400 + p.y for p in points]
     target_count = 0
     point_que = Queue()
@@ -90,7 +103,7 @@ def find_best_way(result_map_list, points, point_way=[]):
         # print("\n路径信息 {}".format(str(point_way)))
         for i in range(1, len(points)):
             result_map = result_map_list[point_way[i - 1].id]
-            result = result_map[point_way[i].y][point_way[i].x]
+            result = result_map[point_way[i].id]
             if result[0] < 0:
                 # print("错误路径 {} => {}, 距离结果: {}".format(str(point_way[i - 1]), str(point_way[i]), result))
                 raise ValueError("错误路径")
@@ -221,11 +234,24 @@ def count_best_way(points=[]):
     points, image = init(points)
     result_map_list = []
     for index, point in enumerate(points):
+        if index == len(points) - 1:
+            break
         result_map = bfs(image, point, 301, 301, points)
-        result_map_list.append(result_map)
+        result_m = [[0, 0] for i in range(len(points))]
+        for i in range(len(points)):
+            position = result_map[points[i].y][points[i].x]
+            result_m[i][0] = position[0]
+            result_m[i][1] = position[1]
+        result_map_list.append(result_m)
+    # 最后一个点不需要计算
+    result_m = [[0, 0] for i in range(len(points))]
+    result_map_list.append(result_m)
+    for i in range(len(points)):
+        result_m[i] = result_map_list[i][len(points) - 1]
+
     resposne_info = []
     for i in range(1, len(points)):
-        location_info = result_map_list[0][points[i].y][points[i].x]
+        location_info = result_map_list[0][points[i].id]
         resposne_info.append("从起点到点{}({}),最短距离{},最多可经过建筑{}".format(i, points[i].print_location(), location_info[0], location_info[1]))
     resposne_info.append('')
     find_best_way(result_map_list, points, [points[0]])
