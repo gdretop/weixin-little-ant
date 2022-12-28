@@ -3,8 +3,13 @@ package com.ant.little.core.dao;
 import com.ant.little.core.domain.WxUserDO;
 import com.ant.little.core.domain.WxUserDOExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
 public interface WxUserDOMapper {
     long countByExample(WxUserDOExample example);
 

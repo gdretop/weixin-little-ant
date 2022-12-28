@@ -42,6 +42,16 @@
             <artifactId>spring-context</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>java/little-ant-web/src/main/resources</directory>
+                <includes>
+                    <include>mapper/*.*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 <!--    <build>-->
 <!--        <plugins>-->
 <!--            <plugin>-->
