@@ -17,7 +17,7 @@ RUN mvn -s /app/settings.xml -f /app/pom.xml clean package
 
 # 选择运行时基础镜像
 #FROM alpine:3.13
-FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic1.0_221226
+FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic1.0_221228
 # 容器默认时区为UTC，如需使用上海时间请启用以下时区设置命令
 # RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
 
@@ -35,6 +35,7 @@ FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic1.0_221226
 #WORKDIR /app
 
 # 将构建产物jar包拷贝到运行时目录中
+COPY python /home/root
 COPY --from=build /app/target/*.jar /home/root/java
 
 # 暴露端口
