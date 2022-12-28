@@ -35,7 +35,7 @@ FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic1.0_221228
 #WORKDIR /app
 
 # 将构建产物jar包拷贝到运行时目录中
-COPY python /home/root
+COPY python /home/root/python
 COPY --from=build /app/target/*.jar /home/root/java
 
 # 暴露端口
