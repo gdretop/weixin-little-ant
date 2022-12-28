@@ -2,7 +2,7 @@
 <configuration>
     <property name="LOG_PATH" value="${app.dir.log}"/>
     <property name="LOG_FILE" value="${app.dir.log}/little-ant.log"/>
-    <property name="logPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [PID=${PID:- }] [%-20.20thread] [%-40.40logger] L:%-3L - %msg%n"/>
+    <property name="logPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS,CTT} %-5level [PID=${PID:- }] [%-20.20thread] [%-40.40logger] L:%-3L - %msg%n"/>
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <encoder>
@@ -31,7 +31,10 @@
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
         </filter>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger Line:%-3L - %msg%n</pattern>

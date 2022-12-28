@@ -149,6 +149,12 @@
                     <include>**/*.*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>java/little-ant-core/src/main/resources</directory>
+                <includes>
+                    <include>mapper/*.*</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 
