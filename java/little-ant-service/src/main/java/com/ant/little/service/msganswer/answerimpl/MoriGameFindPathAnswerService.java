@@ -56,7 +56,7 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
                 for (int i = 1; i < 3; i++) {
                     if (data[i].indexOf(',') == -1) {
                         logger.error("数字分隔符不正确 {}", JSON.toJSONString(wxSubMsgDTO));
-                        throw new RuntimeException("数字分隔符不正确请使用英文逗号(,)");
+                        throw new RuntimeException("坐标分隔符不正确请使用英文逗号(,)");
                     }
                     int[] result = DigitalUtil.parseDigit(data[i], ",");
                     if (result[0] < 1 || result[0] > 301 || result[1] < 1 || result[1] > 301) {
@@ -66,6 +66,9 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
                 }
             } catch (Exception e) {
                 logger.error("数据解析异常 {}", JSON.toJSONString(wxSubMsgDTO));
+                if (e.getMessage().contains("坐标")) {
+                    throw new RuntimeException(e.getMessage());
+                }
                 throw new RuntimeException("数据解析异常请参考相关文档重新输入");
             }
             return true;

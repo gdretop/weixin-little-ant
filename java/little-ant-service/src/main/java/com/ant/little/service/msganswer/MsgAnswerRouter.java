@@ -60,7 +60,14 @@ public class MsgAnswerRouter {
         Response<WxSubMsgResponseDTO> responseAnswer = null;
         try {
             for (MsgAnswerBaseService service : msgAnswerBaseServiceList) {
-                if (service.isMatch(wxSubMsgDTO)) {
+                boolean matchResult = false;
+                try {
+                    matchResult = service.isMatch(wxSubMsgDTO);
+                } catch (Exception e) {
+                    logger.error("匹配抛出异常 {}", e.toString());
+                    return Response.newFailure(e.getMessage(), "");
+                }
+                if (matchResult) {
                     responseAnswer = service.answer(wxSubMsgDTO);
                     return responseAnswer;
                 }
