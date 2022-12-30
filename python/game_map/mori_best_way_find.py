@@ -252,13 +252,13 @@ def count_best_way(points=[]):
     resposne_info = []
     for i in range(1, len(points)):
         location_info = result_map_list[0][points[i].id]
-        resposne_info.append("从起点到点{}({}),最短距离{},最多可经过建筑{}".format(i, points[i].print_location(), location_info[0], location_info[1]))
+        resposne_info.append("从起点到点{}({},{}),最短距离{},最多可经过建筑{}".format(i, points[i].x+1,points[i].y+1, location_info[0], location_info[1]))
     resposne_info.append('')
     find_best_way(result_map_list, points, [points[0]])
     global best_result
     resposne_info.append("最佳路线最少需要{}步,经过{}个建筑物,顺序如下".format(best_result['steps'], best_result['buildings']))
     for p in best_result['point_way']:
-        resposne_info.append("点{} 坐标{}".format(p.id, p.print_location()))
+        resposne_info.append("点{} 坐标{},{}".format(p.id, p.x+1,p.y+1))
     return resposne_info
 
 
@@ -291,22 +291,15 @@ def find_nearest_way(points):
 if __name__ == '__main__':
     # 测试
     points1 = [
-        Point(x=160, y=152, id=0),
-        Point(x=90, y=132, id=1),
-        Point(x=176, y=31, id=2),
-        Point(x=171, y=265, id=3)
+        Point(x=203, y=213, id=0),
+        Point(x=59, y=189, id=1),
+        Point(x=86, y=229, id=2),
+        Point(x=114, y=166, id=3)
     ]
 
     points2 = [
-        # Point(x=130, y=147, id=0),
-        # Point(x=100, y=129, id=1),
-        # Point(x=148, y=82, id=1), # 12.24坐标
-        # Point(x=176, y=31, id=0),
-        # Point(x=180, y=38, id=0), #12.25
-        # Point(x=161, y=117, id=0),  # 12.26
-        Point(x=173, y=197, id=0),  # 12.27
-        # Point(x=175, y=265, id=0),  # 12.28
-        Point(x=171, y=265, id=1)
+        Point(x=203, y=213, id=0),  # 12.27
+        Point(x=114, y=166, id=1)
     ]
     # find_nearest_way(points)
     result = count_best_way(points1)
