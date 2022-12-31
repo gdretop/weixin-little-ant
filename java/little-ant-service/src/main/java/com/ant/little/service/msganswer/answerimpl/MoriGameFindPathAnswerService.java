@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -41,45 +42,62 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             .expireAfterWrite(3, TimeUnit.DAYS)
             .maximumSize(5000)
             .build();
+    private final static String FORMAT_INFO = "正确格式示例如下,至少输入3行,2个点坐标,换行分割点,逗号分割坐标。最后一行可不填，表示你的剩余步数:\n最短路径\n101,101\n202,202\n100";
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {
         if (!WxMsgTypeEnum.TEXT.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        String[] data = wxSubMsgDTO.getContent().split("\n");
-        if (data.length == 3) {
-            if (!"最短路径".equals(data[0])) {
-                return false;
-            }
-            try {
-                for (int i = 1; i < 3; i++) {
-                    if (data[i].indexOf(',') == -1) {
-                        logger.error("数字分隔符不正确 {}", JSON.toJSONString(wxSubMsgDTO));
-                        throw new RuntimeException("坐标分隔符不正确请使用英文逗号(,)");
-                    }
-                    int[] result = DigitalUtil.parseDigit(data[i], ",");
-                    if (result[0] < 1 || result[0] > 301 || result[1] < 1 || result[1] > 301) {
-                        logger.error("坐标数字范围错误 {}", JSON.toJSONString(wxSubMsgDTO));
-                        throw new RuntimeException("坐标数字范围1到301");
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("数据解析异常 {}", JSON.toJSONString(wxSubMsgDTO));
-                if (e.getMessage().contains("坐标")) {
-                    throw new RuntimeException(e.getMessage());
-                }
-                throw new RuntimeException("数据解析异常请参考相关文档重新输入");
-            }
-            return true;
+        if (!wxSubMsgDTO.getContent().startsWith("最短路径")) {
+            return false;
         }
-        return false;
+        String[] data = wxSubMsgDTO.getContent().split("\n");
+        if (data.length < 3) {
+            logger.error("格式不正确 {}", JSON.toJSONString(wxSubMsgDTO));
+            throw new RuntimeException(FORMAT_INFO);
+        }
+        try {
+            for (int i = 1; i < 3; i++) {
+                data[i] = data[i].trim();
+                Character split = DigitalUtil.findFirstNotDigit(data[i]);
+                if (split == null || !(split.equals(' ') || split.equals(','))) {
+                    logger.error("数字分隔符不正确 {}", JSON.toJSONString(wxSubMsgDTO));
+                    throw new RuntimeException("坐标分隔符不正确请使用英文逗号(,)或空格");
+                }
+                int[] result = DigitalUtil.parseDigit(data[i], "" + split);
+                if (result[0] < 1 || result[0] > 301 || result[1] < 1 || result[1] > 301) {
+                    logger.error("坐标数字范围错误 {}", JSON.toJSONString(wxSubMsgDTO));
+                    throw new RuntimeException("坐标数字范围1到301");
+                }
+            }
+            if (data.length == 4) {
+                int length = Integer.parseInt(data[3]);
+                if (length < 0) {
+                    logger.error("剩余步数可以不填，不能小于1 {}", JSON.toJSONString(wxSubMsgDTO));
+                    throw new RuntimeException("剩余步数可以不填，不能小于1 {}");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("数据解析异常 {}", JSON.toJSONString(wxSubMsgDTO));
+            if (e.getMessage().contains("坐标")) {
+                throw new RuntimeException(e.getMessage());
+            }
+            throw new RuntimeException("数据格式有错." + FORMAT_INFO);
+        }
+        return true;
     }
 
     public Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO) {
         String content = wxSubMsgDTO.getContent();
-        content = content.substring("最短路径\n".length());
-        content = content.replace('\n', '#');
+        String[] data = content.split("\n");
+        List<String> newData = new ArrayList<>();
+        for (int i = 1; i < data.length; i++) {
+            data[i] = data[i].trim();
+            data[i] = data[i].replace(' ', ',');
+            newData.add(data[i]);
+        }
+        content = String.join("#", newData);
         String cacheResult = localCache.getIfPresent(content);
         if (cacheResult != null) {
             logger.info("找到缓存信息");
