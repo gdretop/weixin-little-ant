@@ -67,3 +67,4 @@ jspm_packages/
 /ivy*
 /eclipse
 python/manual_test/**
+python/manual_test/*
