@@ -149,7 +149,7 @@ def find_target_from_map(map, start_point, end_point):
     return result
 
 
-def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, column_n):
+def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, column_n, steps=100):
     target_p = end_point
     end_point = end_point.copy()
     end_point.value = result_map[end_point.y][end_point.x][1]
@@ -194,25 +194,39 @@ def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, 
     response_info = []
     response_info.append("从当前点{},{}出发,需要走{}步,可经过建筑{}".format(path[0].x + 1, path[0].y + 1, target_cell[0], target_cell[1]))
     step = 1
+    steps_bak = steps
     for i in range(1, len(path)):
         cur_p = path[i]
         pre_p = path[i - 1]
         way_buildings = find_target_from_map(map, pre_p, cur_p)
         msg = ""
+        move = max(abs(cur_p.y - pre_p.y), abs(cur_p.x - pre_p.x))
         if cur_p.x == pre_p.x:
             if cur_p.y > pre_p.y:
                 msg = ("第{}次:向下走{}步到达({},{})".format(step, cur_p.y - pre_p.y, cur_p.x + 1, cur_p.y + 1))
+                if move >= steps and steps > 0:
+                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1, pre_p.y + 1 + steps)
             if cur_p.y < pre_p.y:
                 msg = ("第{}次:向上走{}步到达({},{})".format(step, pre_p.y - cur_p.y, cur_p.x + 1, cur_p.y + 1))
+                if move >= steps and steps > 0:
+                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1, pre_p.y + 1 - steps)
         if cur_p.y == pre_p.y:
             if cur_p.x > pre_p.x:
                 msg = ("第{}次:向右走{}步到达({},{})".format(step, cur_p.x - pre_p.x, cur_p.x + 1, cur_p.y + 1))
+                if move >= steps and steps > 0:
+                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1 + steps, pre_p.y + 1)
             if cur_p.x < pre_p.x:
                 msg = ("第{}次:向左走{}步到达({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
+                if move >= steps and steps > 0:
+                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1 - steps, pre_p.y + 1)
+        steps -= move
         if way_buildings:
             msg = msg + "\n路上经过{}".format(str(way_buildings))
         response_info.append(msg)
         step += 1
+    if steps > 0:
+        msg = '\n步数富余,你将停留在{},{}'.format(path[-1].x + 1, path[-1].y + 1)
+        response_info.append(msg)
     return response_info
 
 
@@ -252,20 +266,20 @@ def count_best_way(points=[]):
     resposne_info = []
     for i in range(1, len(points)):
         location_info = result_map_list[0][points[i].id]
-        resposne_info.append("从起点到点{}({},{}),最短距离{},最多可经过建筑{}".format(i, points[i].x+1,points[i].y+1, location_info[0], location_info[1]))
+        resposne_info.append("从起点到点{}({},{}),最短距离{},最多可经过建筑{}".format(i, points[i].x + 1, points[i].y + 1, location_info[0], location_info[1]))
     resposne_info.append('')
     find_best_way(result_map_list, points, [points[0]])
     global best_result
     resposne_info.append("最佳路线最少需要{}步,经过{}个建筑物,顺序如下".format(best_result['steps'], best_result['buildings']))
     for p in best_result['point_way']:
-        resposne_info.append("点{} 坐标{},{}".format(p.id, p.x+1,p.y+1))
+        resposne_info.append("点{} 坐标{},{}".format(p.id, p.x + 1, p.y + 1))
     return resposne_info
 
 
-def find_path(points):
+def find_path(points, steps=100):
     points, image = init(points)
     result_map = bfs(image, points[0], 301, 301, points)
-    response_info = get_the_way_between_2_point(image, result_map, points[0].copy(), points[1].copy(), 301, 301)
+    response_info = get_the_way_between_2_point(image, result_map, points[0].copy(), points[1].copy(), 301, 301, steps)
     return response_info
 
 
