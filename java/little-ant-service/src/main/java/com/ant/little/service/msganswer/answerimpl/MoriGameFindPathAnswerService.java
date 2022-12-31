@@ -118,8 +118,10 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
         if (runTimeResponse.getResultCode() == 0) {
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-            wxSubMsgResponseDTO.setContent(runTimeResponse.getResultString());
-            localCache.put(content, runTimeResponse.getResultString());
+            String result = runTimeResponse.getResultString();
+            result = result + "\n\n公众号:旺仔小蚂蚁";
+            wxSubMsgResponseDTO.setContent(result);
+            localCache.put(content, result);
             return Response.newSuccess(wxSubMsgResponseDTO);
         }
         return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
