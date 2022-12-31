@@ -66,4 +66,4 @@ jspm_packages/
 /*.tmproj
 /ivy*
 /eclipse
-python/manual_test/*
+python/manual_test/**
