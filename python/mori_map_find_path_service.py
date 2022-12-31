@@ -15,10 +15,14 @@ if __name__ == '__main__':
         args = sys.argv[1]
         data = args.split("#")
         points = []
+        steps = 100
         for index, d in enumerate(data):
+            if index == 2:
+                steps = int(d)
+                break
             p = d.split(",")
             points.append(Point(x=int(p[0]), y=int(p[1]), id=index))
-        response = mori_best_way_find.find_path(points)
+        response = mori_best_way_find.find_path(points,steps)
         result['resultCode'] = 0
         result['resultString'] = '\n'.join(response)
     except BaseException as e:
