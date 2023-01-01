@@ -42,7 +42,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             .expireAfterWrite(3, TimeUnit.DAYS)
             .maximumSize(5000)
             .build();
-    private final static String FORMAT_INFO = "正确格式示例如下,输入5行,4个点坐标,换行分割点,逗号分割坐标:\n最短路径\n20,200\n101,101\n202,202\n303,303\n";
+    private final static String FORMAT_INFO = "正确格式示例如下,输入5行,4个点坐标,换行分割点,逗号分割坐标:\n最佳路线\n20,200\n101,101\n202,202\n303,303\n";
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {
