@@ -42,7 +42,11 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             .expireAfterWrite(3, TimeUnit.DAYS)
             .maximumSize(5000)
             .build();
-    private final static String FORMAT_INFO = "正确格式示例如下,至少输入3行,2个点坐标,换行分割点,英文逗号或空格分割坐标。最后一行可不填，表示你的剩余步数:\n最短路径\n101,101\n202,202\n100";
+    private final static String FORMAT_INFO = "正确格式示例如下,至少输入3行,2个点坐标,换行分割点,英文逗号或空格分割坐标。最后一行可不填，表示你的剩余步数:\n" +
+            "最短路径\n" +
+            "59 189\n" +
+            "86 229\n" +
+            "54";
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {
