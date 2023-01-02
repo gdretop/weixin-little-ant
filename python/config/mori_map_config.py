@@ -1,3 +1,3 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-SCALE_SIZE = 15
+SCALE_SIZE = 13

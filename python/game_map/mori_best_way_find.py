@@ -25,6 +25,11 @@ from config.mori_map_config import SCALE_SIZE
 11 位置 132 94  C00000 [240, 240, 240] 深红  帐篷-fgColor.rgb 
 12 位置 162 32  4290FF [ 66, 144, 255] 青蓝  工厂-fgColor.rgb 
 13 位置 170 28  A219FF [162,  25, 255] 浅紫  房屋-fgColor.rgb 
+14 位置 261 91  598F38 [ 89, 143,  56] 深绿  热带树-fgColor.rgb 
+15 位置 264 87  E5F3F1 [229, 243, 241] 白灰  石头-fgColor.rgb 
+16 位置 260 87  355522 [ 53,  85,  34] 深绿  深绿树-fgColor.rgb 
+17 位置 274 130 BEFF9E [190, 255, 158] 浅绿  带花草-fgColor.rgb 
+18 位置 263 99  89FF8B [137, 255, 139] 浅绿  小草-fgColor.rgb 
 """
 type_map = {
     0: {"name": "草地岩石", "useful": False, "reach": False},
@@ -41,7 +46,11 @@ type_map = {
     11: {"name": "帐篷", "useful": True, "reach": True},
     12: {"name": "工厂", "useful": True, "reach": True},
     13: {"name": "房屋", "useful": True, "reach": True},
-
+    14: {"name": "热带树", "useful": False, "reach": False},
+    15: {"name": "石头", "useful": False, "reach": False},
+    16: {"name": "深绿树", "useful": False, "reach": False},
+    17: {"name": "带花草", "useful": False, "reach": False},
+    18: {"name": "小草", "useful": False, "reach": False},
 }
 
 global_result_map = None
@@ -205,20 +214,20 @@ def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, 
             if cur_p.y > pre_p.y:
                 msg = ("第{}次:向下走{}步到达({},{})".format(step, cur_p.y - pre_p.y, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
-                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1, pre_p.y + 1 + steps)
+                    msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1, pre_p.y + 1 + steps)
             if cur_p.y < pre_p.y:
                 msg = ("第{}次:向上走{}步到达({},{})".format(step, pre_p.y - cur_p.y, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
-                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1, pre_p.y + 1 - steps)
+                    msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1, pre_p.y + 1 - steps)
         if cur_p.y == pre_p.y:
             if cur_p.x > pre_p.x:
                 msg = ("第{}次:向右走{}步到达({},{})".format(step, cur_p.x - pre_p.x, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
-                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1 + steps, pre_p.y + 1)
+                    msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1 + steps, pre_p.y + 1)
             if cur_p.x < pre_p.x:
                 msg = ("第{}次:向左走{}步到达({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
-                    msg += "\n第{}步你将停留在{},{}".format(steps_bak, pre_p.x + 1 - steps, pre_p.y + 1)
+                    msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1 - steps, pre_p.y + 1)
         steps -= move
         if way_buildings:
             msg = msg + "\n路上经过{}".format(str(way_buildings))
