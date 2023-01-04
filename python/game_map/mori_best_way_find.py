@@ -250,12 +250,21 @@ def init(points):
     for i in range(301):
         for j in range(301):
             image[i][j] = image[i][j] / SCALE_SIZE
-    return points, image
+    response_str = []
+    for index, point in enumerate(points):
+        value = image[point.y][point.x]
+        item = type_map[value]
+        if not item['reach']:
+            response_str.append("坐标{},{}处是一个障碍物,不可到达".format(point.x + 1, point.y + 1))
+    return points, image, response_str
 
 
 def count_best_way(points=[]):
-    points, image = init(points)
+    points, image, response_str = init(points)
+    if response_str:
+        return response_str
     result_map_list = []
+    response_info = []
     for index, point in enumerate(points):
         if index == len(points) - 1:
             break
@@ -272,28 +281,29 @@ def count_best_way(points=[]):
     for i in range(len(points)):
         result_m[i] = result_map_list[i][len(points) - 1]
 
-    resposne_info = []
     for i in range(1, len(points)):
         location_info = result_map_list[0][points[i].id]
-        resposne_info.append("从起点到点{}({},{}),最短距离{},最多可经过建筑{}".format(i, points[i].x + 1, points[i].y + 1, location_info[0], location_info[1]))
-    resposne_info.append('')
+        response_info.append("从起点到点{}({},{}),最短距离{},最多可经过建筑{}".format(i, points[i].x + 1, points[i].y + 1, location_info[0], location_info[1]))
+    response_info.append('')
     find_best_way(result_map_list, points, [points[0]])
     global best_result
-    resposne_info.append("最佳路线最少需要{}步,经过{}个建筑物,顺序如下".format(best_result['steps'], best_result['buildings']))
+    response_info.append("最佳路线最少需要{}步,经过{}个建筑物,顺序如下".format(best_result['steps'], best_result['buildings']))
     for p in best_result['point_way']:
-        resposne_info.append("点{} 坐标{},{}".format(p.id, p.x + 1, p.y + 1))
-    return resposne_info
+        response_info.append("点{} 坐标{},{}".format(p.id, p.x + 1, p.y + 1))
+    return response_info
 
 
 def find_path(points, steps=100):
-    points, image = init(points)
+    points, image, response_str = init(points)
+    if response_str:
+        return response_str
     result_map = bfs(image, points[0], 301, 301, points)
     response_info = get_the_way_between_2_point(image, result_map, points[0].copy(), points[1].copy(), 301, 301, steps)
     return response_info
 
 
 def find_nearest_way(points):
-    points, image = init(points)
+    points, image, response_str = init(points)
     result_map_list = []
     for index, point in enumerate(points):
         result_map = bfs(image, point, 301, 301, points)
