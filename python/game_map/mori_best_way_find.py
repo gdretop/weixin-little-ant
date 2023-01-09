@@ -8,6 +8,7 @@ import cv2
 from common.algorithm import STRICT_DIRECTION
 from common.math_tool import Point
 from config.mori_map_config import SCALE_SIZE
+from game_map.item_map import type_map
 
 """
 位置是Excel上的位置
@@ -31,27 +32,6 @@ from config.mori_map_config import SCALE_SIZE
 17 位置 274 130 BEFF9E [190, 255, 158] 浅绿  带花草-fgColor.rgb 
 18 位置 263 99  89FF8B [137, 255, 139] 浅绿  小草-fgColor.rgb 
 """
-type_map = {
-    0: {"name": "草地岩石", "useful": False, "reach": False},
-    1: {"name": "栏栅", "useful": False, "reach": False},
-    2: {"name": "空地", "useful": False, "reach": True},
-    3: {"name": "山洞", "useful": True, "reach": True},
-    4: {"name": "坐标牌", "useful": True, "reach": True},
-    5: {"name": "建筑", "useful": True, "reach": True},
-    6: {"name": "商店", "useful": True, "reach": True},
-    7: {"name": "医院", "useful": True, "reach": True},
-    8: {"name": "教堂", "useful": True, "reach": True},
-    9: {"name": "加油站", "useful": True, "reach": True},
-    10: {"name": "广场", "useful": True, "reach": True},
-    11: {"name": "帐篷", "useful": True, "reach": True},
-    12: {"name": "工厂", "useful": True, "reach": True},
-    13: {"name": "房屋", "useful": True, "reach": True},
-    14: {"name": "热带树", "useful": False, "reach": False},
-    15: {"name": "石头", "useful": False, "reach": False},
-    16: {"name": "深绿树", "useful": False, "reach": False},
-    17: {"name": "带花草", "useful": False, "reach": False},
-    18: {"name": "小草", "useful": False, "reach": False},
-}
 
 global_result_map = None
 
