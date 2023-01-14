@@ -20,4 +20,5 @@ type_map = {
     16: {"name": "深绿树", "useful": False, "reach": False},
     17: {"name": "带花草", "useful": False, "reach": False},
     18: {"name": "小草", "useful": False, "reach": False},
+    19: {"name": "标记空地", "useful": False, "reach": True},
 }
