@@ -47,7 +47,8 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             "202 213\n" +
             "59 189\n" +
             "86 229\n" +
-            "114 166";;
+            "114 166";
+    ;
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {
@@ -65,6 +66,9 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
         try {
             for (int i = 1; i < 4; i++) {
                 data[i] = data[i].trim();
+                while (data[i].contains("  ")) {
+                    data[i] = data[i].replace("  ", " ");
+                }
                 Character split = DigitalUtil.findFirstNotDigit(data[i]);
                 if (split == null || !(split.equals(' ') || split.equals(','))) {
                     logger.error("数字分隔符不正确 {}", JSON.toJSONString(wxSubMsgDTO));
@@ -88,6 +92,9 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
 
     public Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO) {
         String content = wxSubMsgDTO.getContent();
+        while (content.contains("  ")) {
+            content = content.replace("  ", " ");
+        }
         String[] data = content.split("\n");
         List<String> newData = new ArrayList<>();
         for (int i = 1; i < data.length; i++) {
