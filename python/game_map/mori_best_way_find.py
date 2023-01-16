@@ -192,20 +192,20 @@ def get_the_way_between_2_point(map, result_map, start_point, end_point, row_n, 
         move = max(abs(cur_p.y - pre_p.y), abs(cur_p.x - pre_p.x))
         if cur_p.x == pre_p.x:
             if cur_p.y > pre_p.y:
-                msg = ("第{}次:向下走{}步到达({},{})".format(step, cur_p.y - pre_p.y, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次:Y+{}步到达({},{})".format(step, cur_p.y - pre_p.y, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
                     msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1, pre_p.y + 1 + steps)
             if cur_p.y < pre_p.y:
-                msg = ("第{}次:向上走{}步到达({},{})".format(step, pre_p.y - cur_p.y, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次:Y-{}步到达({},{})".format(step, pre_p.y - cur_p.y, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
                     msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1, pre_p.y + 1 - steps)
         if cur_p.y == pre_p.y:
             if cur_p.x > pre_p.x:
-                msg = ("第{}次:向右走{}步到达({},{})".format(step, cur_p.x - pre_p.x, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次:X+{}步到达({},{})".format(step, cur_p.x - pre_p.x, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
                     msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1 + steps, pre_p.y + 1)
             if cur_p.x < pre_p.x:
-                msg = ("第{}次:向左走{}步到达({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
+                msg = ("第{}次:X-{}步到达({},{})".format(step, pre_p.x - cur_p.x, cur_p.x + 1, cur_p.y + 1))
                 if move >= steps and steps > 0:
                     msg += "\n第{}步你将【停留在{},{}】".format(steps_bak, pre_p.x + 1 - steps, pre_p.y + 1)
         steps -= move
