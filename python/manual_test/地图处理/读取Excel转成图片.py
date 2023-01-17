@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import traceback
+
 import openpyxl
 from PIL import Image
+from PIL.ImageEnhance import Color
+from openpyxl.styles import PatternFill
+
 from config.mori_map_config import SCALE_SIZE
 import common.image_tool
+from game_map.item_map import type_map
 
 """
 位置是Excel上的位置
@@ -21,8 +27,14 @@ import common.image_tool
 11 位置 132 94  C00000 [240, 240, 240] 深红  帐篷-fgColor.rgb 
 12 位置 162 32  4290FF [ 66, 144, 255] 青蓝  工厂-fgColor.rgb 
 13 位置 170 28  A219FF [162,  25, 255] 浅紫  房屋-fgColor.rgb 
+14 位置 261 91  598F38 [89, 143, 56] 深绿  热带树-fgColor.rgb 
+15 位置 264 87  E5F3F1 [229, 243, 241] 白灰  石头-fgColor.rgb 
+16 位置 260 87  355522 [ 53,  85,  34] 深绿  深绿树-fgColor.rgb 
+17 位置 274 130 BEFF9E [190, 255, 158] 浅绿  带花草-fgColor.rgb 
+18 位置 263 99  89FF8B [137, 255, 139] 浅绿  小草-fgColor.rgb 
+19 位置 85 185  FAFF9F [250, 255, 159] 浅黄  标记空地-fgColor.rgb 
 """
-type_map = {
+type_map_excel = {
     '00B050': 0,
     '92D050': 1,
     'F0F0F0': 2,
@@ -37,17 +49,26 @@ type_map = {
     'C00000': 11,
     '4290FF': 12,
     'A219FF': 13,
+    '598F38': 14,
+    'E5F3F1': 15,
+    '355522': 16,
+    'BEFF9E': 17,
+    '89FF8B': 18,
+    'FAFF9F': 19,
 }
 # https://www.cnblogs.com/zxt518/p/15430700.html excel 操作
 dir = '/Users/yuwanglin/project/weixin-little-ant/python/manual_test/地图处理/'
-file_path = dir + '生存之路6.0.1.1.xlsx'
+file_path_1 = dir + '生存之路6.0.1.1.xlsx'
+file_path_2 = dir + '末日生存第二张地图.xlsx'
+file_path_3 = dir + '生存之路扩张.xlsx'
+file_path_4 = dir + '合并地图.xlsx'
 output_path = dir + 'mori_game_map.png'
 output_gray_path = dir + 'mori_game_map_gray.png'
 
 
-def trans_excel_2_png():
+def trans_excel_2_png(file_path, sheet_name):
     wb = openpyxl.load_workbook(file_path, read_only=True)
-    sheet = wb['Sheet1']
+    sheet = wb[sheet_name]
     # print("Sheet2:{0}*{1}的表格".format(sheet.max_row, sheet.max_column))
     image = Image.new('RGB', (301, 301), (255, 255, 255))  # 分别是颜色模式、尺寸、颜色
     image_gray = Image.new('L', (301, 301))
@@ -69,13 +90,204 @@ def trans_excel_2_png():
                 else:
                     print("问题坐标{},{}".format(row_index, column_index))
                 if value:
-                    im[column_index, row_index] = common.image_tool.str_2_rgb(value)
-                    im_gray[column_index, row_index] = type_map[value] * SCALE_SIZE
+                    # im[column_index, row_index] = common.image_tool.str_2_rgb(value)
+                    im[column_index, row_index] = common.image_tool.str_2_rgb(type_map[type_map_excel[value]]['target_color'])
+                    im_gray[column_index, row_index] = type_map_excel[value] * SCALE_SIZE
             except Exception as e:
                 print(e)
     # image.show()  # 展示，可不要
-    image.save(output_path)  # 保存路径及名称
+    scale_size = 4
+    new_size = 300*scale_size
+    image_big = Image.new('RGB', (new_size, new_size), (255, 255, 255))  # 分别是颜色模式、尺寸、颜色
+    image_big_im = image_big.load()
+    for i in range(new_size):
+        for j in range(new_size):
+            try:
+                image_big_im[i, j] = im[int(i / scale_size), int(j / scale_size)]
+            except BaseException as e:
+                print(e)
+    image_big = image_big.rotate(-45, expand=True)
+    image_big.save(output_path)  # 保存路径及名称
+    image_gray.save(output_gray_path)
+    return image_gray, im_gray
+
+
+# trans_excel_2_png()
+
+"""
+树
+山
+路牌
+教堂
+油站
+广场
+建筑
+山洞
+医院
+商店
+帐篷
+工厂
+栏
+"""
+type_map_2 = {
+    "树": [0, [0, 14, 16, 17, 18]],
+    "栏": [1, [1]],
+    "空地": [2, [2]],
+    "山洞": [3, [3]],
+    "路牌": [4, [4]],
+    "建筑": [5, [5, 13]],
+    "商店": [6, [6]],
+    "医院": [7, [7]],
+    "教堂": [8, [8]],
+    "油站": [9, [9]],
+    "广场": [10, [10]],
+    "帐篷": [11, [11]],
+    "工厂": [12, [12]],
+    "房屋": [13, [13]],
+    "热带树": [14, [0, 14]],
+    "山": [15, [0, 15]],
+    "深绿树": [16, [16]],
+    "带花草": [17, [17]],
+    "小草": [18, [18]],
+}
+
+second_type_map = {
+    "树": 16,
+    "山": 15,
+    "路牌": 4,
+    "教堂": 8,
+    "油站": 9,
+    "广场": 10,
+    "建筑": 13,
+    "山洞": 3,
+    "医院": 7,
+    "商店": 6,
+    "帐篷": 11,
+    "工厂": 12,
+    "栏": 1,
+}
+
+
+def compare_2_excel():
+    image_gray, image = trans_excel_2_png(file_path_3, 'scale_map')
+    wb = openpyxl.load_workbook(file_path_2, read_only=True)
+    sheet = wb['Sheet2']
+    for row_index, row in enumerate(sheet.rows):
+        # if row_index < 101 or row_index > 111:
+        #     continue
+        if row_index >= 300:
+            break
+        for column_index, cell in enumerate(row):
+            # if column_index < 25 or column_index > 35:
+            #     continue
+            if column_index >= 300:
+                break
+            try:
+                value = cell.value
+                if value not in type_map_2:
+                    value = "空地"
+                info = type_map_2[value]
+                type = int(image[column_index, row_index] / SCALE_SIZE)
+                if not type_map[type]['reach'] or type >= 6:
+                    continue
+                # if type not in info[1]:
+                # if value in ['广场','帐篷','工厂','教堂','山洞','医院','油站','商店'] and type_map[type]['name'] in ['建筑']:
+                #     continue
+                if value not in ['栏', '山', '树']:
+                    continue
+                    # if type not in
+                print("找到不同位置:", column_index + 1, row_index + 1, value, type_map[type]['name'])
+                image[column_index, row_index] = 0
+            except Exception as e:
+                traceback.print_exc()
+                print(e)
     image_gray.save(output_gray_path)
 
 
-trans_excel_2_png()
+# compare_2_excel()
+def map_scale():
+    image_gray, image = trans_excel_2_png(file_path_1, 'Sheet1')
+    wb = openpyxl.load_workbook(file_path_1, read_only=False)
+    sheet = wb.copy_worksheet(wb.worksheets[1])
+    sheet.title = 'scale_map'
+    wb.active = sheet
+    for row_index, row in enumerate(sheet.rows):
+        if row_index >= 300:
+            break
+        for column_index, cell in enumerate(row):
+            if column_index >= 300:
+                break
+            if image[column_index, row_index] != 2 * SCALE_SIZE:
+                continue
+            flag = False
+            for i in range(-3, 4, 1):
+                for j in range(-3, 4, 1):
+                    if abs(i) + abs(j) > 3:
+                        continue
+                    r_i = row_index + i
+                    c_j = column_index + j
+                    if r_i < 0 or r_i >= 300 or c_j < 0 or c_j >= 300:
+                        continue
+                    if image[c_j, r_i] == 19 * SCALE_SIZE:
+                        flag = True
+            if flag:
+                cell.fill = PatternFill('solid', fgColor='FAFF9F')
+    wb.save(file_path_3)
+
+
+def combine_map_2_excel():
+    image_gray, image = trans_excel_2_png(file_path_1, 'Sheet1')
+    wb = openpyxl.load_workbook(file_path_1, read_only=False)
+    sheet = wb.copy_worksheet(wb.worksheets[1])
+    sheet.title = 'combine_map'
+    wb.active = sheet
+
+    wb2 = openpyxl.load_workbook(file_path_2, read_only=False)
+    sheet2 = wb2['Sheet2']
+    for row_index, row in enumerate(sheet.rows):
+        if row_index >= 300:
+            break
+        row2 = sheet2[row_index + 1]
+        for column_index, cell in enumerate(row):
+            if column_index >= 300:
+                break
+            # 已标记的位置不再更新
+            if image[column_index, row_index] >= 6 * SCALE_SIZE:
+                continue
+            cell2 = row2[column_index]
+            value2 = cell2.value
+            # 第二张图非物体不处理
+            if value2 not in second_type_map:
+                continue
+            # 在走过点可视区域的不合并
+            flag = False
+            for i in range(-3, 4, 1):
+                for j in range(-3, 4, 1):
+                    if abs(i) + abs(j) > 3:
+                        continue
+                    r_i = row_index + i
+                    c_j = column_index + j
+                    if r_i < 0 or r_i >= 300 or c_j < 0 or c_j >= 300:
+                        continue
+                    if image[c_j, r_i] == 19 * SCALE_SIZE:
+                        flag = True
+
+            if flag:
+                continue
+            try:
+                cover_type = second_type_map[value2]
+                cover_cell_info = type_map[cover_type]
+                cell.fill = PatternFill('solid', fgColor=cover_cell_info['color'])
+                cell.value = '?'
+            except Exception as e:
+                traceback.print_exc()
+                print(e)
+    wb.save(file_path_3)
+
+
+trans_excel_2_png(file_path_4, '颜色地图')
+# map_scale()
+# compare_2_excel()
+# print([i for i in range(-3, 4, 1)])
+# 合并两张图
+# combine_map_2_excel()
