@@ -36,20 +36,9 @@ public class WxSubscribeController {
     @ResponseBody
     public WxMsgVO answer(@RequestBody WxMsgVO wxMsgVO) {
         long startTime = System.currentTimeMillis();
-        WxSubMsgDTO wxSubMsgDTO = new WxSubMsgDTO();
         try {
-            wxSubMsgDTO.setToUserName(wxMsgVO.ToUserName);
-            wxSubMsgDTO.setFromUserName(wxMsgVO.FromUserName);
-            wxSubMsgDTO.setCreateTime(wxMsgVO.CreateTime);
-            wxSubMsgDTO.setMsgType(wxMsgVO.MsgType);
-            wxSubMsgDTO.setContent(wxMsgVO.Content);
-            wxSubMsgDTO.setMsgId(wxMsgVO.MsgId);
-            wxSubMsgDTO.setWxOpenId(httpServletRequest.getHeader("x-wx-from-openid"));
-            wxSubMsgDTO.setWxSource(httpServletRequest.getHeader("x-wx-source"));
-            wxSubMsgDTO.setRealIp(httpServletRequest.getHeader("x-real-ip"));
-            wxSubMsgDTO.setWxAppid(httpServletRequest.getHeader("x-wx-appid"));
+            WxSubMsgDTO wxSubMsgDTO = vo2Dto(wxMsgVO);
             logger.info("接收到请求 {}", JSON.toJSONString(wxSubMsgDTO));
-
             Response<WxSubMsgResponseDTO> response = msgAnswerRouter.process(wxSubMsgDTO);
             if (response.isFailed()) {
                 WxMsgVO result = wxMsgVO.transDirection();
@@ -68,6 +57,27 @@ public class WxSubscribeController {
             long endTime = System.currentTimeMillis();
             logger.info("此次执行消耗时间: {}", endTime - startTime);
         }
+    }
+
+    private WxSubMsgDTO vo2Dto(WxMsgVO wxMsgVO) {
+        WxSubMsgDTO wxSubMsgDTO = new WxSubMsgDTO();
+        wxSubMsgDTO.setToUserName(wxMsgVO.ToUserName);
+        wxSubMsgDTO.setFromUserName(wxMsgVO.FromUserName);
+        wxSubMsgDTO.setCreateTime(wxMsgVO.CreateTime);
+        wxSubMsgDTO.setMsgType(wxMsgVO.MsgType);
+        wxSubMsgDTO.setContent(wxMsgVO.Content);
+        wxSubMsgDTO.setMsgId(wxMsgVO.MsgId);
+        wxSubMsgDTO.setEvent(wxMsgVO.Event);
+        wxSubMsgDTO.setEventKey(wxMsgVO.EventKey);
+        wxSubMsgDTO.setTicket(wxMsgVO.Ticket);
+        wxSubMsgDTO.setLatitude(wxMsgVO.Latitude);
+        wxSubMsgDTO.setLongitude(wxMsgVO.Longitude);
+        wxSubMsgDTO.setPrecision(wxMsgVO.Precision);
+        wxSubMsgDTO.setWxOpenId(httpServletRequest.getHeader("x-wx-from-openid"));
+        wxSubMsgDTO.setWxSource(httpServletRequest.getHeader("x-wx-source"));
+        wxSubMsgDTO.setRealIp(httpServletRequest.getHeader("x-real-ip"));
+        wxSubMsgDTO.setWxAppid(httpServletRequest.getHeader("x-wx-appid"));
+        return wxSubMsgDTO;
     }
 
     private WxMsgVO tans2WxResponse(WxSubMsgResponseDTO wxSubMsgResponseDTO) {

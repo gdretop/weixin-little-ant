@@ -13,6 +13,12 @@ public class WxMsgVO {
     public String MsgType;
     public String Content;
     public long MsgId;
+    public String Event;
+    public String EventKey;
+    public String Ticket;
+    public Double Latitude;
+    public Double Longitude;
+    public Double Precision;
 
     public WxMsgVO transDirection() {
         WxMsgVO wxMsgVO = new WxMsgVO();
@@ -22,6 +28,12 @@ public class WxMsgVO {
         wxMsgVO.MsgType = this.MsgType;
         wxMsgVO.Content = this.Content;
         wxMsgVO.MsgId = this.MsgId;
+        wxMsgVO.Event = this.Event;
+        wxMsgVO.EventKey = this.EventKey;
+        wxMsgVO.Ticket = this.Ticket;
+        wxMsgVO.Latitude = this.Latitude;
+        wxMsgVO.Longitude = this.Longitude;
+        wxMsgVO.Precision = this.Precision;
         return wxMsgVO;
     }
 

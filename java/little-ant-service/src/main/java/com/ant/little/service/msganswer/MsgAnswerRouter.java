@@ -53,10 +53,7 @@ public class MsgAnswerRouter {
             logger.error("保存用户信息失败 {} {}", JSON.toJSONString(wxUserDTO), e, e);
         }
 
-        RequestLogDTO requestLogDTO = new RequestLogDTO();
-        requestLogDTO.setOpenId(wxSubMsgDTO.getWxOpenId());
-        requestLogDTO.setAppid(wxSubMsgDTO.getWxAppid());
-        requestLogDTO.setRequestInfo(JSON.toJSONString(wxSubMsgDTO));
+        RequestLogDTO requestLogDTO = new RequestLogDTO(wxSubMsgDTO);
         Response<WxSubMsgResponseDTO> responseAnswer = null;
         try {
             for (MsgAnswerBaseService service : msgAnswerBaseServiceList) {
