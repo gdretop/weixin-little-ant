@@ -40,6 +40,20 @@ public class RequestLogService {
 
     private RequestLogDO dto2DO(RequestLogDTO requestLogDTO) {
         RequestLogDO requestLogDO = new RequestLogDO();
+        requestLogDO.setToUserName(requestLogDTO.getToUserName());
+        requestLogDO.setFromUserName(requestLogDTO.getFromUserName());
+        requestLogDO.setCreateTime(requestLogDTO.getCreateTime());
+        requestLogDO.setMsgType(requestLogDTO.getMsgType());
+        requestLogDO.setContent(requestLogDTO.getContent());
+        requestLogDO.setWxSource(requestLogDTO.getWxSource());
+        requestLogDO.setRealIp(requestLogDTO.getRealIp());
+        requestLogDO.setMsgId(requestLogDTO.getMsgId());
+        requestLogDO.setEvent(requestLogDTO.getEvent());
+        requestLogDO.setEventKey(requestLogDTO.getEventKey());
+        requestLogDO.setTicket(requestLogDTO.ticket);
+        requestLogDO.setLatitude(requestLogDTO.getLatitude());
+        requestLogDO.setLongitude(requestLogDTO.getLongitude());
+        requestLogDO.setPrecision(requestLogDTO.getPrecision());
         requestLogDO.setOpenId(requestLogDTO.getOpenId());
         requestLogDO.setEnv(requestLogDTO.getEnv());
         requestLogDO.setAppid(requestLogDTO.getAppid());
