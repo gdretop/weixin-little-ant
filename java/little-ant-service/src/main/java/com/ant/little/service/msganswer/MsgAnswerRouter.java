@@ -9,6 +9,7 @@ import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.model.dto.WxUserDTO;
 import com.ant.little.service.msganswer.answerimpl.MoriGameBestWayAnswerService;
 import com.ant.little.service.msganswer.answerimpl.MoriGameFindPathAnswerService;
+import com.ant.little.service.msganswer.answerimpl.SubscribeService;
 import com.ant.little.service.store.RequestLogService;
 import com.ant.little.service.store.WxUserService;
 import org.slf4j.Logger;
@@ -35,10 +36,12 @@ public class MsgAnswerRouter {
     private WxUserService wxUserService;
 
     public MsgAnswerRouter(@Autowired MoriGameBestWayAnswerService moriGameWayPathAnswerService,
-                           @Autowired MoriGameFindPathAnswerService moriGameFindPathAnswerService
+                           @Autowired MoriGameFindPathAnswerService moriGameFindPathAnswerService,
+                           @Autowired SubscribeService subscribeService
     ) {
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
         msgAnswerBaseServiceList.add(moriGameFindPathAnswerService);
+        msgAnswerBaseServiceList.add(subscribeService);
     }
 
     public Response<WxSubMsgResponseDTO> process(WxSubMsgDTO wxSubMsgDTO) {

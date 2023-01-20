@@ -53,7 +53,7 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.TEXT.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().startsWith("最短路径")) {
+        if (!wxSubMsgDTO.getContent().startsWith("最短")) {
             return false;
         }
         String[] data = wxSubMsgDTO.getContent().split("\n");

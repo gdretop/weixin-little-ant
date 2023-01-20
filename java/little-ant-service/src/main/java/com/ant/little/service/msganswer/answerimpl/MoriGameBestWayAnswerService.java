@@ -55,7 +55,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.TEXT.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().startsWith("最佳路线")) {
+        if (!wxSubMsgDTO.getContent().startsWith("最佳")) {
             return false;
         }
         String[] data = wxSubMsgDTO.getContent().split("\n");

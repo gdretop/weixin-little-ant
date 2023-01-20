@@ -62,8 +62,10 @@ file_path_1 = dir + '生存之路6.0.1.1.xlsx'
 file_path_2 = dir + '末日生存第二张地图.xlsx'
 file_path_3 = dir + '生存之路扩张.xlsx'
 file_path_4 = dir + '合并地图.xlsx'
+ele_dir = dir + '元素/'
 output_path = dir + 'mori_game_map.png'
 output_gray_path = dir + 'mori_game_map_gray.png'
+output_whole_path = dir + 'whole_image.png'
 
 
 def trans_excel_2_png(file_path, sheet_name):
@@ -97,7 +99,7 @@ def trans_excel_2_png(file_path, sheet_name):
                 print(e)
     # image.show()  # 展示，可不要
     scale_size = 4
-    new_size = 300*scale_size
+    new_size = 300 * scale_size
     image_big = Image.new('RGB', (new_size, new_size), (255, 255, 255))  # 分别是颜色模式、尺寸、颜色
     image_big_im = image_big.load()
     for i in range(new_size):
@@ -285,9 +287,33 @@ def combine_map_2_excel():
     wb.save(file_path_3)
 
 
+def build_whole_map():
+    ele_size = 16
+    image_size = 300 * ele_size
+    ele_map = {}
+    for i in range(20):
+        path = ele_dir + "/{}.png".format(i)
+        image = Image.open(path)
+        image = image.resize((ele_size, ele_size))
+        image = image.load()
+        ele_map[i] = image
+    image = Image.new('RGB', (image_size, image_size), (255, 255, 255))  # 分别是颜色模式、尺寸、颜色
+    im = image.load()
+    image_gray, im_gray = trans_excel_2_png(file_path_4, '颜色地图')
+    for i in range(300):
+        for j in range(300):
+            value = int(im_gray[i, j] / SCALE_SIZE)
+            for k in range(ele_size):
+                for l in range(ele_size):
+                    im[i * ele_size + k, j * ele_size + l] = ele_map[value][k, l]
+    image.save(output_whole_path)
+
+
+# build_whole_map()
 trans_excel_2_png(file_path_4, '颜色地图')
 # map_scale()
 # compare_2_excel()
 # print([i for i in range(-3, 4, 1)])
 # 合并两张图
 # combine_map_2_excel()
+# print("从当前点91,294出发,需要走408步,可经过建筑37\n第1次:Y-6步到达(91,288)\n第2次:X+3步到达(94,288)\n路上经过['房屋']\n第3次:Y-13步到达(94,275)\n第4次:X+5步到达(99,275)\n路上经过['房屋']\n第5次:Y-4步到达(99,271)\n第6次:X+2步到达(101,271)\n第7次:Y-13步到达(101,258)\n路上经过['坐标牌', '商店']\n第8次:X+7步到达(108,258)\n第9次:Y-4步到达(108,254)\n路上经过['房屋']\n第10次:X+13步到达(121,254)\n路上经过['帐篷', '广场']\n第11次:Y-1步到达(121,253)\n第12次:X+8步到达(129,253)\n第13次:Y-16步到达(129,237)\n路上经过['帐篷']\n第14次:X+1步到达(130,237)\n第15次:Y-6步到达(130,231)\n第100步你将【停留在130,233】\n第16次:X+5步到达(135,231)\n第17次:Y-6步到达(135,225)\n路上经过['坐标牌']\n第18次:X+5步到达(140,225)\n路上经过['房屋']\n第19次:Y-7步到达(140,218)\n第20次:X+19步到达(159,218)\n路上经过['房屋']\n第21次:Y-9步到达(159,209)\n路上经过['房屋']\n第22次:X+3步到达(162,209)\n第23次:Y-9步到达(162,200)\n第24次:X+4步到达(166,200)\n第25次:Y-15步到达(166,185)\n路上经过['房屋', '广场', '房屋']\n第26次:X+1步到达(167,185)\n第27次:Y-6步到达(167,179)\n路上经过['加油站']\n第28次:X+3步到达(170,179)\n第29次:Y-9步到达(170,170)\n路上经过['房屋', '商店']\n第30次:X+1步到达(171,170)\n第31次:Y-10步到达(171,160)\n路上经过['房屋']\n第32次:X+4步到达(175,160)\n第33次:Y-7步到达(175,153)\n路上经过['医院']\n第34次:X+9步到达(184,153)\n第35次:Y-1步到达(184,152)\n第36次:X+8步到达(192,152)\n路上经过['房屋']\n第37次:Y-4步到达(192,148)\n路上经过['房屋']\n第38次:X+5步到达(197,148)\n第39次:Y-2步到达(197,146)\n第40次:X+17步到达(214,146)\n路上经过['广场', '房屋']\n第41次:Y-5步到达(214,141)\n第42次:X+4步到达(218,141)\n路上经过['帐篷']\n第43次:Y-8步到达(218,133)\n第44次:X+2步到达(220,133)\n第45次:Y-4步到达(220,129)\n第46次:X+3步到达(223,129)\n路上经过['房屋']\n第47次:Y-4步到达(223,125)\n第48次:X+3步到达(226,125)\n路上经过['加油站']\n第49次:Y-12步到达(226,113)\n路上经过['房屋']\n第50次:X+6步到达(232,113)\n路上经过['工厂']\n第51次:Y-6步到达(232,107)\n第52次:X+6步到达(238,107)\n路上经过['坐标牌']\n第53次:Y-3步到达(238,104)\n路上经过['房屋']\n第54次:X+2步到达(240,104)\n第55次:Y-3步到达(240,101)\n第56次:X+12步到达(252,101)\n路上经过['商店']\n第57次:Y-3步到达(252,98)\n第58次:X+11步到达(263,98)\n第59次:Y-12步到达(263,86)\n路上经过['房屋']\n第60次:X+2步到达(265,86)\n第61次:Y-3步到达(265,83)\n路上经过['工厂']\n第62次:X+4步到达(269,83)\n路上经过['房屋']\n第63次:Y-8步到达(269,75)\n路上经过['帐篷']\n第64次:X+9步到达(278,75)\n路上经过['房屋']\n第65次:Y-2步到达(278,73)\n\n公众号:旺仔小蚂蚁")

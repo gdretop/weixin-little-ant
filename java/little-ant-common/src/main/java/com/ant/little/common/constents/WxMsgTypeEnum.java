@@ -7,7 +7,8 @@ package com.ant.little.common.constents;
  * @Version 1.0
  **/
 public enum WxMsgTypeEnum {
-    TEXT("text");
+    TEXT("text"),
+    EVENT("event");
     private String name;
 
     WxMsgTypeEnum(String name) {
