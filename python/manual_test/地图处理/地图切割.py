@@ -4,8 +4,8 @@ import cv2
 from PIL import Image
 
 dir = '/Users/yuwanglin/project/weixin-little-ant/python/manual_test/地图处理/'
-file_path_1 = dir + 'image/map11.jpeg'
-output_path = dir + 'image/result11.png'
+file_path_1 = dir + 'image/map12.jpeg'
+output_path = dir + 'image/result12.png'
 image = Image.open(file_path_1)
 # 8 行 9列
 # 1080 * 9 / 8

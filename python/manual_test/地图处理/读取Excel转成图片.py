@@ -4,6 +4,7 @@ import traceback
 
 import openpyxl
 from PIL import Image
+from PIL import ImageDraw
 from PIL.ImageEnhance import Color
 from openpyxl.styles import PatternFill
 
@@ -288,29 +289,42 @@ def combine_map_2_excel():
 
 
 def build_whole_map():
-    ele_size = 16
-    image_size = 300 * ele_size
+    ele_size = 32
+    width = 300
+    image_size = width * ele_size
     ele_map = {}
+    ele_map_init = {}
     for i in range(20):
         path = ele_dir + "/{}.png".format(i)
         image = Image.open(path)
         image = image.resize((ele_size, ele_size))
+        ele_map_init[i] = image
         image = image.load()
         ele_map[i] = image
     image = Image.new('RGB', (image_size, image_size), (255, 255, 255))  # 分别是颜色模式、尺寸、颜色
     im = image.load()
     image_gray, im_gray = trans_excel_2_png(file_path_4, '颜色地图')
-    for i in range(300):
-        for j in range(300):
+    for i in range(width):
+        for j in range(width):
             value = int(im_gray[i, j] / SCALE_SIZE)
-            for k in range(ele_size):
-                for l in range(ele_size):
-                    im[i * ele_size + k, j * ele_size + l] = ele_map[value][k, l]
+            if value not in [2,19]:
+                for k in range(ele_size):
+                    for l in range(ele_size):
+                        im[i * ele_size + k, j * ele_size + l] = ele_map[value][k, l]
+            else:
+                copy_img = ele_map_init[value].copy()
+                draw = ImageDraw.Draw(copy_img,'RGBA')
+                draw.text((0,0),"x={}\ny={}".format(i+1,j+1),fill=(255,255,255))
+                im_text = copy_img.load()
+                for k in range(ele_size):
+                    for l in range(ele_size):
+                        im[i * ele_size + k, j * ele_size + l] = im_text[k, l]
+
     image.save(output_whole_path)
 
 
-# build_whole_map()
-trans_excel_2_png(file_path_4, '颜色地图')
+build_whole_map()
+# trans_excel_2_png(file_path_4, '颜色地图')
 # map_scale()
 # compare_2_excel()
 # print([i for i in range(-3, 4, 1)])

@@ -42,7 +42,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             .expireAfterWrite(3, TimeUnit.DAYS)
             .maximumSize(5000)
             .build();
-    private final static String FORMAT_INFO = "正确格式示例如下,输入5行,第二行是当前坐标，2到4行是3个宝箱坐标,空格分割坐标:\n" +
+    private final static String FORMAT_INFO = "正确格式示例如下,输入5行,第二行是当前坐标，3到5行是3个宝箱坐标,空格分割坐标:\n" +
             "最佳路线\n" +
             "202 213\n" +
             "59 189\n" +
