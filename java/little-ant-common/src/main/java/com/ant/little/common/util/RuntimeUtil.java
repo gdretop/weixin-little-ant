@@ -43,8 +43,8 @@ public class RuntimeUtil {
             logger.info("启动数据读取线程");
             errorThread.start();
             inputThread.start();
-            proc.waitFor(300, TimeUnit.SECONDS);
-            boolean await_result = latch.await(5, TimeUnit.SECONDS);
+            proc.waitFor(60, TimeUnit.SECONDS);
+            boolean await_result = latch.await(60, TimeUnit.SECONDS);
             logger.info("指令输出结果 输入信息:{} 错误信息:{} 等待执行结果:{}", inputInfo, errorInfo, await_result);
             return Response.newSuccess(inputInfo);
         } catch (Exception e) {
