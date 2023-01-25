@@ -292,7 +292,7 @@ def combine_map_2_excel():
 
 
 def build_whole_map():
-    ele_size = 32
+    ele_size = 20
     width = 300
     image_size = width * ele_size
     ele_map = {}
