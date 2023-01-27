@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ant.little.common.constents.ResponseTemplateConstants;
 import com.ant.little.common.constents.WxMsgTypeEnum;
+import com.ant.little.common.model.Point;
 import com.ant.little.common.model.Response;
 import com.ant.little.common.model.RunTimeResponse;
 import com.ant.little.common.util.DigitalUtil;
@@ -11,6 +12,7 @@ import com.ant.little.common.util.RuntimeUtil;
 import com.ant.little.core.config.EnvConfig;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
+import com.ant.little.service.findmap.FindMapWayUtil;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -40,8 +42,11 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             .concurrencyLevel(4)
             .initialCapacity(100)
             .expireAfterWrite(3, TimeUnit.DAYS)
+            .expireAfterAccess(3, TimeUnit.DAYS)
             .maximumSize(5000)
             .build();
+    @Autowired
+    private FindMapWayUtil findMapWayUtil;
     private final static String FORMAT_INFO = "正确格式示例如下,输入5行,第二行是当前坐标，3到5行是3个宝箱坐标,空格分割坐标:\n" +
             "最佳路线\n" +
             "202 213\n" +
@@ -91,44 +96,63 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
     }
 
     public Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO) {
-        String content = wxSubMsgDTO.getContent();
-        while (content.contains("  ")) {
-            content = content.replace("  ", " ");
-        }
-        String[] data = content.split("\n");
-        List<String> newData = new ArrayList<>();
-        for (int i = 1; i < data.length; i++) {
-            data[i] = data[i].trim();
-            data[i] = data[i].replace(' ', ',');
-            newData.add(data[i]);
-        }
-        content = String.join("#", newData);
-        String cacheResult = localCache.getIfPresent(content);
-        if (cacheResult != null) {
-            logger.info("找到缓存信息");
+        try {
+            String content = wxSubMsgDTO.getContent();
+            while (content.contains("  ")) {
+                content = content.replace("  ", " ");
+            }
+            String[] data = content.split("\n");
+            List<String> newData = new ArrayList<>();
+            for (int i = 1; i < data.length; i++) {
+                data[i] = data[i].trim();
+                data[i] = data[i].replace(' ', ',');
+                newData.add(data[i]);
+            }
+            content = String.join("#", newData);
+            String cacheResult = localCache.getIfPresent(content);
+            if (cacheResult != null) {
+                logger.info("找到缓存信息");
+                WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
+                wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+                wxSubMsgResponseDTO.setContent(cacheResult);
+                return Response.newSuccess(wxSubMsgResponseDTO);
+            }
+            List<Point> points = new ArrayList<>();
+            for (int i = 1; i <= 4; i++) {
+                String[] p = data[i].split(",");
+                Point point = new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1]));
+                points.add(point);
+            }
+            List<String> resultList = findMapWayUtil.countBestWay(points);
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-            wxSubMsgResponseDTO.setContent(cacheResult);
-            return Response.newSuccess(wxSubMsgResponseDTO);
-        }
-        String command = String.format("%s %s/mori_map_best_way_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
-        Response<List<String>> response = RuntimeUtil.synCall(command);
-        if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
-            logger.error("计算最佳路线失败 {}", response.getErrMsg());
-            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
-        }
-        List<String> output = response.getData();
-        String resultString = output.get(output.size() - 1);
-        RunTimeResponse runTimeResponse = JSONObject.parseObject(resultString, RunTimeResponse.class);
-        if (runTimeResponse.getResultCode() == 0) {
-            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
-            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-            String result = runTimeResponse.getResultString();
+            String result = String.join("\n", resultList);
             result = result + "\n\n公众号:旺仔小蚂蚁";
             wxSubMsgResponseDTO.setContent(result);
             localCache.put(content, result);
             return Response.newSuccess(wxSubMsgResponseDTO);
+//        String command = String.format("%s %s/mori_map_best_way_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
+//        Response<List<String>> response = RuntimeUtil.synCall(command);
+//        if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
+//            logger.error("计算最佳路线失败 {}", response.getErrMsg());
+//            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
+//        }
+//        List<String> output = response.getData();
+//        String resultString = output.get(output.size() - 1);
+//        RunTimeResponse runTimeResponse = JSONObject.parseObject(resultString, RunTimeResponse.class);
+//        if (runTimeResponse.getResultCode() == 0) {
+//            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
+//            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+//            String result = runTimeResponse.getResultString();
+//            result = result + "\n\n公众号:旺仔小蚂蚁";
+//            wxSubMsgResponseDTO.setContent(result);
+//            localCache.put(content, result);
+//            return Response.newSuccess(wxSubMsgResponseDTO);
+//        }
+        } catch (Exception e) {
+            logger.error("处理失败 {} {}", JSON.toJSONString(wxSubMsgDTO), e.toString(), e);
+            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
         }
-        return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
+
     }
 }

@@ -1,16 +1,15 @@
 package com.ant.little.service.msganswer.answerimpl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ant.little.common.constents.ResponseTemplateConstants;
 import com.ant.little.common.constents.WxMsgTypeEnum;
+import com.ant.little.common.model.Point;
 import com.ant.little.common.model.Response;
-import com.ant.little.common.model.RunTimeResponse;
 import com.ant.little.common.util.DigitalUtil;
-import com.ant.little.common.util.RuntimeUtil;
 import com.ant.little.core.config.EnvConfig;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
+import com.ant.little.service.findmap.FindMapWayUtil;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +34,14 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
     private final Logger logger = LoggerFactory.getLogger(MoriGameFindPathAnswerService.class);
     @Autowired
     private EnvConfig envConfig;
+    @Autowired
+    private FindMapWayUtil findMapWayUtil;
+
     private Cache<String, String> localCache = CacheBuilder.newBuilder()
             .concurrencyLevel(4)
             .initialCapacity(100)
             .expireAfterWrite(3, TimeUnit.DAYS)
+            .expireAfterAccess(3, TimeUnit.DAYS)
             .maximumSize(5000)
             .build();
     private final static String FORMAT_INFO = "正确格式示例如下,至少输入3行,第2行是当前坐标，第3行是要去的宝箱坐标，空格分割坐标。最后一行可不填，表示你的剩余步数:\n" +
@@ -73,9 +75,9 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
                     throw new RuntimeException("坐标分隔符不正确请使用英文逗号(,)或空格");
                 }
                 int[] result = DigitalUtil.parseDigit(data[i], "" + split);
-                if (result[0] < 1 || result[0] > 301 || result[1] < 1 || result[1] > 301) {
+                if (result[0] < 1 || result[0] >= 300 || result[1] < 1 || result[1] >= 301) {
                     logger.error("坐标数字范围错误 {}", JSON.toJSONString(wxSubMsgDTO));
-                    throw new RuntimeException("坐标数字范围1到301");
+                    throw new RuntimeException("坐标的数字必须在1和300之间");
                 }
             }
             if (data.length == 4) {
@@ -96,48 +98,75 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
     }
 
     public Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO) {
-        String content = wxSubMsgDTO.getContent();
-        while (content.contains("  ")) {
-            content = content.replace("  ", " ");
-        }
-        String[] data = content.split("\n");
-        List<String> newData = new ArrayList<>();
-        for (int i = 1; i < data.length; i++) {
-            data[i] = data[i].trim();
-            data[i] = data[i].replace(' ', ',');
-            newData.add(data[i]);
-        }
-        content = String.join("#", newData);
-        String cacheResult = localCache.getIfPresent(content);
-        if (cacheResult != null) {
-            logger.info("找到缓存信息");
+        try {
+            String content = wxSubMsgDTO.getContent();
+            while (content.contains("  ")) {
+                content = content.replace("  ", " ");
+            }
+            String[] data = content.split("\n");
+            List<String> newData = new ArrayList<>();
+            for (int i = 1; i < data.length; i++) {
+                data[i] = data[i].trim();
+                data[i] = data[i].replace(' ', ',');
+                newData.add(data[i]);
+            }
+            content = String.join("#", newData);
+            String cacheResult = localCache.getIfPresent(content);
+            if (cacheResult != null) {
+                logger.info("找到缓存信息");
+                WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
+                wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+                wxSubMsgResponseDTO.setContent(cacheResult);
+                return Response.newSuccess(wxSubMsgResponseDTO);
+            }
+            int steps = 100;
+            List<Point> points = new ArrayList<>();
+            for (int i = 1; i <= 2; i++) {
+                String[] p = data[i].split(",");
+                Point point = new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1]));
+                points.add(point);
+            }
+            if (data.length > 3) {
+                steps = Integer.parseInt(data[3]);
+            }
+            List<String> resultList = findMapWayUtil.findPath(points, steps);
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-            wxSubMsgResponseDTO.setContent(cacheResult);
-            return Response.newSuccess(wxSubMsgResponseDTO);
-        }
-        String command = String.format("%s %s/mori_map_find_path_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
-        Response<List<String>> response = RuntimeUtil.synCall(command);
-        if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
-            logger.error("计算最短路线失败 {}", response.getErrMsg());
-            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
-        }
-        List<String> output = response.getData();
-        String resultString = output.get(output.size() - 1);
-        RunTimeResponse runTimeResponse = JSONObject.parseObject(resultString, RunTimeResponse.class);
-        if (runTimeResponse.getResultCode() == 0) {
-            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
-            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-            String result = runTimeResponse.getResultString();
-            if(result.length() > 1180) {
-                result = result.substring(0,1180);
-                result = result+"\n【路线太长,不展示了,先走一会吧】";
+            String result = String.join("\n", resultList);
+            if (result.length() > 1180) {
+                result = result.substring(0, 1180);
+                result = result + "\n【路线太长,不展示了,先走一会吧】";
             }
             result = result + "\n\n公众号:旺仔小蚂蚁";
             wxSubMsgResponseDTO.setContent(result);
             localCache.put(content, result);
             return Response.newSuccess(wxSubMsgResponseDTO);
+        } catch (Exception e) {
+//        String command = String.format("%s %s/mori_map_find_path_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
+//        Response<List<String>> response = RuntimeUtil.synCall(command);
+//        if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
+//            logger.error("计算最短路线失败 {}", response.getErrMsg());
+//            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
+//        }
+//        List<String> output = response.getData();
+//        String resultString = output.get(output.size() - 1);
+//        RunTimeResponse runTimeResponse = JSONObject.parseObject(resultString, RunTimeResponse.class);
+
+//        if (runTimeResponse.getResultCode() == 0) {
+//            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
+//            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+//            String result = runTimeResponse.getResultString();
+//            if(result.length() > 1180) {
+//                result = result.substring(0,1180);
+//                result = result+"\n【路线太长,不展示了,先走一会吧】";
+//            }
+//            result = result + "\n\n公众号:旺仔小蚂蚁";
+//            wxSubMsgResponseDTO.setContent(result);
+//            localCache.put(content, result);
+//            return Response.newSuccess(wxSubMsgResponseDTO);
+//        }
+            logger.error("处理失败 {} {}", JSON.toJSONString(wxSubMsgDTO), e.toString(), e);
+            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
         }
-        return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
     }
 }

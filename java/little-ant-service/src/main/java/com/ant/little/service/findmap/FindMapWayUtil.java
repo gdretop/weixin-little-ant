@@ -308,10 +308,14 @@ public class FindMapWayUtil {
             p.x--;
             p.y--;
             p.id = i;
-            int value = MORI_MAP[p.y][p.x];
-            JSONObject json = MapElement.getElement(value + "");
-            if (!json.getBoolean("reach")) {
-                responseStr.add(String.format("坐标%d,%d处是一个障碍物,不可到达", p.x + 1, p.y + 1));
+            if (p.x < 0 || p.x >= 300 || p.y < 0 || p.y >= 300) {
+                responseStr.add(String.format("坐标 %d,%d 必须在1到300之间", p.x + 1, p.y + 1));
+            } else {
+                int value = MORI_MAP[p.y][p.x];
+                JSONObject json = MapElement.getElement(value + "");
+                if (!json.getBoolean("reach")) {
+                    responseStr.add(String.format("坐标%d,%d处是一个障碍物,不可到达", p.x + 1, p.y + 1));
+                }
             }
         }
         return responseStr;
@@ -366,7 +370,7 @@ public class FindMapWayUtil {
         FindMapWayUtil findMapWayUtil = new FindMapWayUtil();
         findMapWayUtil.moriWholeMapPath = "/Users/yuwanglin/project/weixin-little-ant/python/game_map/mori_game_map_gray.png";
         findMapWayUtil.setUp();
-        List<String> response = findMapWayUtil.findPath(Arrays.asList(new Point(91, 26), new Point(240, 10)), 100);
+        List<String> response = findMapWayUtil.findPath(Arrays.asList(new Point(1, 3011), new Point(240, 10)), 100);
         for (String x : response) {
             System.out.println(x);
         }
