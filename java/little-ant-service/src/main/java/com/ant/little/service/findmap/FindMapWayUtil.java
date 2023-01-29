@@ -347,7 +347,7 @@ public class FindMapWayUtil {
         bestResult.steps = -1;
         pointWay.add(points.get(0));
         findBestWay(points, pointWay, bestResult);
-        responseStr.add(String.format("最佳路线最少需要%d步,经过%d个建筑物,取宝箱顺序如下", bestResult.steps, bestResult.buildings));
+        responseStr.add(String.format("\n最佳路线最少需要%d步,经过%d个建筑物,取宝箱顺序如下", bestResult.steps, bestResult.buildings));
         for (int i = 0; i < bestResult.bestWay.size(); i++) {
             Point p = bestResult.bestWay.get(i);
             String msg = String.format("%s%d 坐标 %d,%d", i == 0 ? "起点" : "宝箱", p.id, p.x + 1, p.y + 1);
