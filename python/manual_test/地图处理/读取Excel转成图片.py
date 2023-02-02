@@ -317,7 +317,7 @@ def build_whole_map():
             else:
                 copy_img = ele_map_init[value].copy()
                 draw = ImageDraw.Draw(copy_img,'RGBA')
-                draw.text((0,0),"x={}\ny={}".format(i+1,j+1),fill=(255,255,255))
+                draw.text((0,0),"x {}\ny {}".format(i+1,j+1),fill=(255,255,255))
                 im_text = copy_img.load()
                 for k in range(ele_size):
                     for l in range(ele_size):
