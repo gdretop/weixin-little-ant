@@ -8,6 +8,7 @@ package com.ant.little.common.constents;
  **/
 public enum WxMsgTypeEnum {
     TEXT("text"),
+    JSON("json"),
     EVENT("event");
     private String name;
 

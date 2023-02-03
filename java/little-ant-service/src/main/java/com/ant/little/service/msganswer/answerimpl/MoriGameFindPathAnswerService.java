@@ -32,8 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
 
     private final Logger logger = LoggerFactory.getLogger(MoriGameFindPathAnswerService.class);
-    @Autowired
-    private EnvConfig envConfig;
+
     @Autowired
     private FindMapWayUtil findMapWayUtil;
 
@@ -133,7 +132,7 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
             String result = String.join("\n", resultList);
-            if (result.length() > 1150) {
+            if (!"小程序最短路径".equals(wxSubMsgDTO.getToUserName()) && result.length() > 1150) {
                 result = result.substring(0, 1150);
                 result = result + "\n【路线太长,不展示了,先走一会吧】";
             }

@@ -7,9 +7,7 @@ import com.ant.little.model.dto.RequestLogDTO;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.model.dto.WxUserDTO;
-import com.ant.little.service.msganswer.answerimpl.MoriGameBestWayAnswerService;
-import com.ant.little.service.msganswer.answerimpl.MoriGameFindPathAnswerService;
-import com.ant.little.service.msganswer.answerimpl.SubscribeService;
+import com.ant.little.service.msganswer.answerimpl.*;
 import com.ant.little.service.store.RequestLogService;
 import com.ant.little.service.store.WxUserService;
 import org.slf4j.Logger;
@@ -37,11 +35,14 @@ public class MsgAnswerRouter {
 
     public MsgAnswerRouter(@Autowired MoriGameBestWayAnswerService moriGameWayPathAnswerService,
                            @Autowired MoriGameFindPathAnswerService moriGameFindPathAnswerService,
-                           @Autowired SubscribeService subscribeService
-    ) {
+                           @Autowired SubscribeService subscribeService,
+                           @Autowired UpdateBoxPositionAnswerService updateBoxPositionAnswerService,
+                           @Autowired GetKeyConfigAnswerService getKeyConfigAnswerService) {
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
         msgAnswerBaseServiceList.add(moriGameFindPathAnswerService);
         msgAnswerBaseServiceList.add(subscribeService);
+        msgAnswerBaseServiceList.add(updateBoxPositionAnswerService);
+        msgAnswerBaseServiceList.add(getKeyConfigAnswerService);
     }
 
     public Response<WxSubMsgResponseDTO> process(WxSubMsgDTO wxSubMsgDTO) {
