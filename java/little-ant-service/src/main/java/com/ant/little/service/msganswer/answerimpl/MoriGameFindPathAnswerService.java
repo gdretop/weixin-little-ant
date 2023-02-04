@@ -132,7 +132,7 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
             String result = String.join("\n", resultList);
-            if (!"小程序最短路径".equals(wxSubMsgDTO.getToUserName()) && result.length() > 1150) {
+            if (!"wx_applet_shortest_path".equals(wxSubMsgDTO.getToUserName()) && result.length() > 1150) {
                 result = result.substring(0, 1150);
                 result = result + "\n【路线太长,不展示了,先走一会吧】";
             }

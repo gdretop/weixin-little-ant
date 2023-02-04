@@ -350,7 +350,17 @@ public class FindMapWayUtil {
         responseStr.add(String.format("\n最佳路线最少需要%d步,经过%d个建筑物,取宝箱顺序如下", bestResult.steps, bestResult.buildings));
         for (int i = 0; i < bestResult.bestWay.size(); i++) {
             Point p = bestResult.bestWay.get(i);
-            String msg = String.format("%s%d 坐标 %d,%d", i == 0 ? "起点" : "宝箱", p.id, p.x + 1, p.y + 1);
+            String start = "从起点出发";
+            if (i == 1) {
+                start = "首先去宝箱";
+            }
+            if (i == 2) {
+                start = "第二去宝箱";
+            }
+            if (i == 3) {
+                start = "最后去宝箱";
+            }
+            String msg = String.format("%s%d 坐标 %d,%d", start, p.id, p.x + 1, p.y + 1);
             responseStr.add(msg);
         }
         return responseStr;
