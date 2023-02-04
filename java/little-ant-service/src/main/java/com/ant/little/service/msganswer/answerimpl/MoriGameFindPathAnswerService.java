@@ -6,7 +6,6 @@ import com.ant.little.common.constents.WxMsgTypeEnum;
 import com.ant.little.common.model.Point;
 import com.ant.little.common.model.Response;
 import com.ant.little.common.util.DigitalUtil;
-import com.ant.little.core.config.EnvConfig;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.service.findmap.FindMapWayUtil;
@@ -115,6 +114,7 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
                 logger.info("找到缓存信息");
                 WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
                 wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+                cacheResult = dataCut(cacheResult, wxSubMsgDTO);
                 wxSubMsgResponseDTO.setContent(cacheResult);
                 return Response.newSuccess(wxSubMsgResponseDTO);
             }
@@ -132,40 +132,22 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
             String result = String.join("\n", resultList);
-            if (!"wx_applet_shortest_path".equals(wxSubMsgDTO.getToUserName()) && result.length() > 1150) {
-                result = result.substring(0, 1150);
-                result = result + "\n【路线太长,不展示了,先走一会吧】";
-            }
-            result = result + "\n\n公众号:旺仔小蚂蚁";
-            wxSubMsgResponseDTO.setContent(result);
             localCache.put(content, result);
+            result = dataCut(result, wxSubMsgDTO);
+            wxSubMsgResponseDTO.setContent(result);
             return Response.newSuccess(wxSubMsgResponseDTO);
         } catch (Exception e) {
-//        String command = String.format("%s %s/mori_map_find_path_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
-//        Response<List<String>> response = RuntimeUtil.synCall(command);
-//        if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
-//            logger.error("计算最短路线失败 {}", response.getErrMsg());
-//            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
-//        }
-//        List<String> output = response.getData();
-//        String resultString = output.get(output.size() - 1);
-//        RunTimeResponse runTimeResponse = JSONObject.parseObject(resultString, RunTimeResponse.class);
-
-//        if (runTimeResponse.getResultCode() == 0) {
-//            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
-//            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-//            String result = runTimeResponse.getResultString();
-//            if(result.length() > 1180) {
-//                result = result.substring(0,1180);
-//                result = result+"\n【路线太长,不展示了,先走一会吧】";
-//            }
-//            result = result + "\n\n公众号:旺仔小蚂蚁";
-//            wxSubMsgResponseDTO.setContent(result);
-//            localCache.put(content, result);
-//            return Response.newSuccess(wxSubMsgResponseDTO);
-//        }
             logger.error("处理失败 {} {}", JSON.toJSONString(wxSubMsgDTO), e.toString(), e);
             return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
         }
+    }
+
+    private String dataCut(String result, WxSubMsgDTO wxSubMsgDTO) {
+        if (!"wx_applet_shortest_path".equals(wxSubMsgDTO.getToUserName()) && result.length() > 1150) {
+            result = result.substring(0, 1150);
+            result = result + "\n【路线太长,不展示了,先走一会吧】";
+        }
+        result = result + "\n\n公众号:旺仔小蚂蚁";
+        return result;
     }
 }
