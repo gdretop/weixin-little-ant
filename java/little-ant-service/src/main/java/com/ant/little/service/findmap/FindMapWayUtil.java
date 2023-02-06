@@ -261,13 +261,13 @@ public class FindMapWayUtil {
             int move = Math.max(Math.abs(curP.y - preP.y), Math.abs(curP.x - preP.x));
             if (curP.x == preP.x) {
                 if (curP.y > preP.y) {
-                    msg = String.format("第%d次:Y+%d步到达(%d,%d)", step, curP.y - preP.y, curP.x + 1, curP.y + 1);
+                    msg = String.format("第%d次:左下[Y+]%d步到达(%d,%d)", step, curP.y - preP.y, curP.x + 1, curP.y + 1);
                     if (move >= steps && steps > 0) {
                         msg += String.format("\n第%d步你将【停留在%d,%d】", stepBak, preP.x + 1, preP.y + 1 + steps);
                     }
                 }
                 if (curP.y < preP.y) {
-                    msg = String.format("第%d次:Y-%d步到达(%d,%d)", step, preP.y - curP.y, curP.x + 1, curP.y + 1);
+                    msg = String.format("第%d次:右上[Y-]%d步到达(%d,%d)", step, preP.y - curP.y, curP.x + 1, curP.y + 1);
                     if (move >= steps && steps > 0) {
                         msg += String.format("\n第%d步你将【停留在%d,%d】", stepBak, preP.x + 1, preP.y + 1 - steps);
                     }
@@ -275,13 +275,13 @@ public class FindMapWayUtil {
             }
             if (curP.y == preP.y) {
                 if (curP.x > preP.x) {
-                    msg = String.format("第%d次:X+%d步到达(%d,%d)", step, curP.x - preP.x, curP.x + 1, curP.y + 1);
+                    msg = String.format("第%d次:右下[X+]%d步到达(%d,%d)", step, curP.x - preP.x, curP.x + 1, curP.y + 1);
                     if (move >= steps && steps > 0) {
                         msg += String.format("\n第%d步你将【停留在%d,%d】", stepBak, preP.x + 1 + steps, preP.y + 1);
                     }
                 }
                 if (curP.x < preP.x) {
-                    msg = String.format("第%d次:X-%d步到达(%d,%d)", step, preP.x - curP.x, curP.x + 1, curP.y + 1);
+                    msg = String.format("第%d次:左上[X-]%d步到达(%d,%d)", step, preP.x - curP.x, curP.x + 1, curP.y + 1);
                     if (move >= steps && steps > 0) {
                         msg += String.format("\n第%d步你将【停留在%d,%d】", stepBak, preP.x + 1 - steps, preP.y + 1);
                     }
