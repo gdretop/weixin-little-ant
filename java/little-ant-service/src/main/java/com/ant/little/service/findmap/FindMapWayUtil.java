@@ -293,6 +293,9 @@ public class FindMapWayUtil {
                 msg = msg + String.format("\n路上经过%s", wayBuildings.toString());
             }
             responseInfo.add(msg);
+            if (i % 5 == 0) {
+                responseInfo.add("");
+            }
         }
         if (steps > 0) {
             String msg = String.format("\n步数富余,你将停留在%d,%d", targetP.x + 1, targetP.y + 1);
