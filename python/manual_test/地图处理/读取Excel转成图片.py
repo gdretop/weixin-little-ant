@@ -301,6 +301,7 @@ def build_whole_map():
         path = ele_dir + "/{}.png".format(i)
         image = Image.open(path)
         image = image.resize((ele_size, ele_size))
+        # image.save("/Users/yuwanglin/project/weixin-little-ant/python/image/{}.png".format(i))
         ele_map_init[i] = image
         image = image.load()
         ele_map[i] = image

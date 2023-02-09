@@ -13,6 +13,7 @@ public class WxSubMsgResponseDTO {
     private String msgType;
     private String content;
     private long msgId;
+    private boolean saveResponse = true;
 
     public String getToUserName() {
         return toUserName;
@@ -60,5 +61,13 @@ public class WxSubMsgResponseDTO {
 
     public void setMsgId(long msgId) {
         this.msgId = msgId;
+    }
+
+    public boolean isSaveResponse() {
+        return saveResponse;
+    }
+
+    public void setSaveResponse(boolean saveResponse) {
+        this.saveResponse = saveResponse;
     }
 }

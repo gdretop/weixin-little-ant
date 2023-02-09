@@ -4,14 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.ant.little.common.constents.MapElement;
 import com.ant.little.common.model.Point;
 import com.ant.little.common.util.ImageUtil;
+import com.ant.little.core.config.EnvConfig;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -34,11 +37,40 @@ public class FindMapWayUtil {
             .build();
     @Value(value = "${mori.wholemap.path}")
     protected String moriWholeMapPath;
-    private static int[][] MORI_MAP;
+    private final int LOCAL_MAP_HEIGHT = 11;
+    private final int LOCAL_MAP_WIDTH = 11;
+    @Autowired
+    private EnvConfig envConfig;
+    private int[][] MORI_MAP;
+    private BufferedImage wholeMap;
 
     @PostConstruct
     public void setUp() throws IOException {
         MORI_MAP = ImageUtil.readGrayImage(moriWholeMapPath);
+        String fileName = String.format("%s/game_map/whole_image.png", envConfig.getPythonCodeDir());
+        wholeMap = ImageUtil.readImage(fileName);
+    }
+
+    public String genLocalMap(Point point) {
+        int eleHeight = wholeMap.getHeight() / 300;
+        int eleWidth = wholeMap.getWidth() / 300;
+        Point p = point.copy();
+        p.x -= LOCAL_MAP_WIDTH / 2 + 1;
+        p.y -= LOCAL_MAP_HEIGHT / 2 + 1;
+        if (p.x <= 0) {
+            p.x = 1;
+        }
+        if (p.x >= 300 - LOCAL_MAP_WIDTH) {
+            p.x = 300 - LOCAL_MAP_WIDTH;
+        }
+        if (p.y <= 0) {
+            p.y = 1;
+        }
+        if (p.y >= 300 - LOCAL_MAP_HEIGHT) {
+            p.x = 300 - LOCAL_MAP_HEIGHT;
+        }
+        BufferedImage bufferedImage = wholeMap.getSubimage(p.x * eleWidth, p.y * eleHeight, LOCAL_MAP_WIDTH * eleWidth, LOCAL_MAP_HEIGHT * eleHeight);
+        return ImageUtil.GetBase64FromImage(bufferedImage);
     }
 
     private Point getDistInfo(Point start, Point target) {

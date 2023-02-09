@@ -37,12 +37,14 @@ public class MsgAnswerRouter {
                            @Autowired MoriGameFindPathAnswerService moriGameFindPathAnswerService,
                            @Autowired SubscribeService subscribeService,
                            @Autowired UpdateBoxPositionAnswerService updateBoxPositionAnswerService,
-                           @Autowired GetKeyConfigAnswerService getKeyConfigAnswerService) {
+                           @Autowired GetKeyConfigAnswerService getKeyConfigAnswerService,
+                           @Autowired GetLocalMapService getLocalMapService) {
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
         msgAnswerBaseServiceList.add(moriGameFindPathAnswerService);
         msgAnswerBaseServiceList.add(subscribeService);
         msgAnswerBaseServiceList.add(updateBoxPositionAnswerService);
         msgAnswerBaseServiceList.add(getKeyConfigAnswerService);
+        msgAnswerBaseServiceList.add(getLocalMapService);
     }
 
     public Response<WxSubMsgResponseDTO> process(WxSubMsgDTO wxSubMsgDTO) {
@@ -78,7 +80,11 @@ public class MsgAnswerRouter {
         } finally {
             try {
                 logger.info("保存记录日志");
-                requestLogDTO.setResponseInfo(JSON.toJSONString(responseAnswer));
+                if (responseAnswer != null && responseAnswer.isSuccess() && !responseAnswer.getData().isSaveResponse()) {
+
+                } else {
+                    requestLogDTO.setResponseInfo(JSON.toJSONString(responseAnswer));
+                }
                 requestLogService.insert(requestLogDTO);
             } catch (Exception e) {
                 logger.error("保存日志信息失败 {} {}", JSON.toJSONString(requestLogDTO), e, e);

@@ -1,15 +1,11 @@
 package com.ant.little.service.msganswer.answerimpl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ant.little.common.constents.ResponseTemplateConstants;
 import com.ant.little.common.constents.WxMsgTypeEnum;
 import com.ant.little.common.model.Point;
 import com.ant.little.common.model.Response;
-import com.ant.little.common.model.RunTimeResponse;
 import com.ant.little.common.util.DigitalUtil;
-import com.ant.little.common.util.RuntimeUtil;
-import com.ant.little.core.config.EnvConfig;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.service.findmap.FindMapWayUtil;
@@ -20,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
 
     private final Logger logger = LoggerFactory.getLogger(MoriGameBestWayAnswerService.class);
-    @Autowired
-    private EnvConfig envConfig;
     private Cache<String, String> localCache = CacheBuilder.newBuilder()
             .concurrencyLevel(4)
             .initialCapacity(100)
@@ -131,24 +124,6 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             wxSubMsgResponseDTO.setContent(result);
             localCache.put(content, result);
             return Response.newSuccess(wxSubMsgResponseDTO);
-//        String command = String.format("%s %s/mori_map_best_way_service.py %s", envConfig.getPythonInc(), envConfig.getPythonCodeDir(), content);
-//        Response<List<String>> response = RuntimeUtil.synCall(command);
-//        if (response.isFailed() || CollectionUtils.isEmpty(response.getData())) {
-//            logger.error("计算最佳路线失败 {}", response.getErrMsg());
-//            return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
-//        }
-//        List<String> output = response.getData();
-//        String resultString = output.get(output.size() - 1);
-//        RunTimeResponse runTimeResponse = JSONObject.parseObject(resultString, RunTimeResponse.class);
-//        if (runTimeResponse.getResultCode() == 0) {
-//            WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
-//            wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
-//            String result = runTimeResponse.getResultString();
-//            result = result + "\n\n公众号:旺仔小蚂蚁";
-//            wxSubMsgResponseDTO.setContent(result);
-//            localCache.put(content, result);
-//            return Response.newSuccess(wxSubMsgResponseDTO);
-//        }
         } catch (Exception e) {
             logger.error("处理失败 {} {}", JSON.toJSONString(wxSubMsgDTO), e.toString(), e);
             return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
