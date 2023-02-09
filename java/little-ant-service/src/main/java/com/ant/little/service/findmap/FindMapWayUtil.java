@@ -67,7 +67,7 @@ public class FindMapWayUtil {
             p.y = 1;
         }
         if (p.y >= 300 - LOCAL_MAP_HEIGHT) {
-            p.x = 300 - LOCAL_MAP_HEIGHT;
+            p.y = 300 - LOCAL_MAP_HEIGHT;
         }
         BufferedImage bufferedImage = wholeMap.getSubimage(p.x * eleWidth, p.y * eleHeight, LOCAL_MAP_WIDTH * eleWidth, LOCAL_MAP_HEIGHT * eleHeight);
         return ImageUtil.GetBase64FromImage(bufferedImage);
