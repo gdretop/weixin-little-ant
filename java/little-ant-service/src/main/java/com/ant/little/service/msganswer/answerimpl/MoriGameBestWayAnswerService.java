@@ -105,6 +105,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             String cacheResult = localCache.getIfPresent(content);
             if (cacheResult != null) {
                 logger.info("找到缓存信息");
+                cacheResult = dataProcess(cacheResult,wxSubMsgDTO);
                 WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
                 wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
                 wxSubMsgResponseDTO.setContent(cacheResult);
@@ -120,14 +121,20 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
             String result = String.join("\n", resultList);
-            result = result + "\n\n公众号:旺仔小蚂蚁";
-            wxSubMsgResponseDTO.setContent(result);
             localCache.put(content, result);
+            result = dataProcess(result,wxSubMsgDTO);
+            wxSubMsgResponseDTO.setContent(result);
             return Response.newSuccess(wxSubMsgResponseDTO);
         } catch (Exception e) {
             logger.error("处理失败 {} {}", JSON.toJSONString(wxSubMsgDTO), e.toString(), e);
             return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
         }
-
+    }
+    private String dataProcess(String result, WxSubMsgDTO wxSubMsgDTO) {
+        if (!"wx_applet_best_way".equals(wxSubMsgDTO.getToUserName())) {
+            result = "推荐使用小程序工具,菜单栏->生存之路->宝箱工具\n\n" + result;
+        }
+        result = result + "\n\n公众号:旺仔小蚂蚁";
+        return result;
     }
 }

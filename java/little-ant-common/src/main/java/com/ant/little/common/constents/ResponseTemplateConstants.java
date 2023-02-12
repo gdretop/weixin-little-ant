@@ -11,5 +11,6 @@ public class ResponseTemplateConstants {
     //    public static String CAN_NOT_FIND_ANSWER_SERVICE = "找不到相关指令@.@!,等待管理员查看后处理哈^_^\n(或者查看相关文档确认一下输入格式)";
     public static String CAN_NOT_FIND_ANSWER_SERVICE = "点击菜单栏->生存之路->地图指南 查看地图和坐标方向\n" +
             "点击菜单栏->生存之路->宝箱攻略 查看生存之路工具用法 \n" +
+            "点击菜单栏->生存之路->宝箱工具 进入小程序工具 \n" +
             "旧版工具，向公众号发送 最佳路线 或 最短路径 来查看指令详情\n";
 }
