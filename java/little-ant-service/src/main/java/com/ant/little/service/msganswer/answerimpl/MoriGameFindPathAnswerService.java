@@ -145,8 +145,8 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
     private String dataCut(String result, WxSubMsgDTO wxSubMsgDTO) {
         if (!"wx_applet_shortest_path".equals(wxSubMsgDTO.getToUserName())) {
             result = "推荐使用小程序工具,菜单栏->生存之路->宝箱工具\n\n" + result;
-            if (result.length() > 1150) {
-                result = result.substring(0, 1150);
+            if (result.length() > 1000) {
+                result = result.substring(0, 1000);
             }
             result = result + "\n【路线太长,不展示了,先走一会吧】";
         }
