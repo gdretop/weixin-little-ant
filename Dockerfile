@@ -35,7 +35,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositorie
     && apk add --update --no-cache openjdk8-jre-base \
     && rm -f /var/cache/apk/*
 WORKDIR /app
-RUN mkdir /home/root/java \
+RUN mkdir /home/root \
+    && mkdir /home/root/java \
     && mkdir /home/root/logs \
     && mkdir /home/root/python
 # 指定运行时的工作目录
