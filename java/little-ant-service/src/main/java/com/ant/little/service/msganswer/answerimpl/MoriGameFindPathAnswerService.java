@@ -147,8 +147,9 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
             result = "推荐使用小程序工具,菜单栏->生存之路->宝箱工具\n\n" + result;
             if (result.length() > 1000) {
                 result = result.substring(0, 1000);
+                result = result + "\n【路线太长,不展示了,先走一会吧】";
             }
-            result = result + "\n【路线太长,不展示了,先走一会吧】";
+
         }
         result = result + "\n\n公众号:旺仔小蚂蚁";
         return result;
