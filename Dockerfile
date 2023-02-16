@@ -42,7 +42,10 @@ RUN mkdir /home/root \
 # 指定运行时的工作目录
 #RUN mkdir -p /app
 #WORKDIR /app
-
+RUN apk add --update ttf-dejavu fontconfig
+RUN rm -rf /var/cache/apk/*
+# 刷新字体
+RUN mkfontscale && mkfontdir && fc-cache
 # 将构建产物jar包拷贝到运行时目录中
 COPY python /home/root/python
 COPY --from=build /app/target/*.jar /home/root/java
