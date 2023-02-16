@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,18 +44,28 @@ public class FindMapWayUtil {
     @Autowired
     private EnvConfig envConfig;
     private int[][] MORI_MAP;
-    private BufferedImage wholeMap;
+    //        private BufferedImage wholeMap;
+    private Map<Integer, BufferedImage> elementImgMap = new HashMap<>();
+    private final int ELE_SIZE = 32;
+
 
     @PostConstruct
     public void setUp() throws IOException {
         MORI_MAP = ImageUtil.readGrayImage(moriWholeMapPath);
-        String fileName = String.format("%s/game_map/whole_image.png", envConfig.getPythonCodeDir());
-        wholeMap = ImageUtil.readImage(fileName);
+//        String fileName2 = String.format("%s/game_map/whole_image.png", envConfig.getPythonCodeDir());
+//        wholeMap = ImageUtil.readImage(fileName2);
+        for (int i = 0; i < 20; i++) {
+            String fileName = String.format("%s/game_map/image/%d.png", envConfig.getPythonCodeDir(), i);
+            BufferedImage element = ImageUtil.readImage(fileName);
+            elementImgMap.put(i, element);
+        }
     }
 
     public String genLocalMap(Point point) {
-        int eleHeight = wholeMap.getHeight() / 300;
-        int eleWidth = wholeMap.getWidth() / 300;
+//        int eleHeight = wholeMap.getHeight() / 300;
+        int eleHeight = ELE_SIZE;
+//        int eleWidth = wholeMap.getWidth() / 300;
+        int eleWidth = ELE_SIZE;
         Point p = point.copy();
         p.x -= LOCAL_MAP_WIDTH / 2 + 1;
         p.y -= LOCAL_MAP_HEIGHT / 2 + 1;
@@ -69,7 +81,34 @@ public class FindMapWayUtil {
         if (p.y >= 300 - LOCAL_MAP_HEIGHT) {
             p.y = 300 - LOCAL_MAP_HEIGHT;
         }
-        BufferedImage bufferedImage = wholeMap.getSubimage(p.x * eleWidth, p.y * eleHeight, LOCAL_MAP_WIDTH * eleWidth, LOCAL_MAP_HEIGHT * eleHeight);
+        BufferedImage bufferedImage = new BufferedImage(LOCAL_MAP_WIDTH * eleWidth, LOCAL_MAP_WIDTH * eleHeight, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < LOCAL_MAP_HEIGHT; i++) {
+            for (int j = 0; j < LOCAL_MAP_WIDTH; j++) {
+                Point np = new Point(p.x + j, p.y + i);
+                int type = MORI_MAP[np.y][np.x];
+                BufferedImage ele = elementImgMap.get(type);
+                BufferedImage newEle = new BufferedImage(ELE_SIZE, ELE_SIZE, BufferedImage.TYPE_INT_RGB);
+                for (int l = 0; l < ELE_SIZE; l++) {
+                    for (int k = 0; k < ELE_SIZE; k++) {
+                        newEle.setRGB(l, k, ele.getRGB(l, k));
+                    }
+                }
+                if (type == 2 || type == 19) {
+                    Graphics2D pen = newEle.createGraphics();
+                    pen.setColor(new Color(255, 255, 255));
+                    pen.setFont(new Font("宋体", Font.PLAIN, 10));
+                    pen.drawString(String.format("x %d", np.x), 0, 11);
+                    pen.drawString(String.format("y %d", np.y), 0, 22);
+                }
+//                pen.drawImage(newEle,0,0,ELE_SIZE,ELE_SIZE,null);
+                for (int l = 0; l < ELE_SIZE; l++) {
+                    for (int k = 0; k < ELE_SIZE; k++) {
+                        bufferedImage.setRGB(j * ELE_SIZE + l, i * ELE_SIZE + k, newEle.getRGB(l, k));
+                    }
+                }
+            }
+        }
+//        BufferedImage bufferedImage = wholeMap.getSubimage(p.x * eleWidth, p.y * eleHeight, LOCAL_MAP_WIDTH * eleWidth, LOCAL_MAP_HEIGHT * eleHeight);
         return ImageUtil.GetBase64FromImage(bufferedImage);
     }
 

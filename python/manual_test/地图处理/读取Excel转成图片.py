@@ -301,16 +301,18 @@ def build_whole_map():
         path = ele_dir + "/{}.png".format(i)
         image = Image.open(path)
         image = image.resize((ele_size, ele_size))
-        # image.save("/Users/yuwanglin/project/weixin-little-ant/python/image/{}.png".format(i))
+        image.save("/Users/yuwanglin/project/weixin-little-ant/python/game_map/image/{}.png".format(i))
         ele_map_init[i] = image
         image = image.load()
         ele_map[i] = image
     image = Image.new('RGB', (image_size, image_size), (255, 255, 255))  # 分别是颜色模式、尺寸、颜色
     im = image.load()
     image_gray, im_gray = trans_excel_2_png(file_path_4, '颜色地图')
+    i_offset = 0
+    j_offset = 0
     for i in range(width):
         for j in range(width):
-            value = int(im_gray[i, j] / SCALE_SIZE)
+            value = int(im_gray[i+i_offset, j+j_offset] / SCALE_SIZE)
             if value not in [2,19]:
                 for k in range(ele_size):
                     for l in range(ele_size):
@@ -318,7 +320,7 @@ def build_whole_map():
             else:
                 copy_img = ele_map_init[value].copy()
                 draw = ImageDraw.Draw(copy_img,'RGBA')
-                draw.text((0,0),"x {}\ny {}".format(i+1,j+1),fill=(255,255,255))
+                draw.text((0,0),"x {}\ny {}".format(i+1+i_offset,j+1+j_offset),fill=(255,255,255))
                 im_text = copy_img.load()
                 for k in range(ele_size):
                     for l in range(ele_size):
