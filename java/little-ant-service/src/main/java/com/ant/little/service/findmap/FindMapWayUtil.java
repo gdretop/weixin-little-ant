@@ -96,9 +96,9 @@ public class FindMapWayUtil {
                 if (type == 2 || type == 19) {
                     Graphics2D pen = newEle.createGraphics();
                     pen.setColor(new Color(255, 255, 255));
-                    pen.setFont(new Font(null, Font.PLAIN, 10));
-                    pen.drawString(String.format("x %d", np.x), 0, 11);
-                    pen.drawString(String.format("y %d", np.y), 0, 22);
+                    pen.setFont(new Font(null, Font.BOLD, 10));
+                    pen.drawString(String.format("x %d", np.x+1), 0, 11);
+                    pen.drawString(String.format("y %d", np.y+1), 0, 22);
                 }
 //                pen.drawImage(newEle,0,0,ELE_SIZE,ELE_SIZE,null);
                 for (int l = 0; l < ELE_SIZE; l++) {
