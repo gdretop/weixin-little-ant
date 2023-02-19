@@ -5,6 +5,7 @@ import com.ant.little.common.constents.MapElement;
 import com.ant.little.common.model.Point;
 import com.ant.little.common.util.ImageUtil;
 import com.ant.little.core.config.EnvConfig;
+import com.ant.little.service.model.FindPositionResponse;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ public class FindMapWayUtil {
     //        private BufferedImage wholeMap;
     private Map<Integer, BufferedImage> elementImgMap = new HashMap<>();
     private final int ELE_SIZE = 32;
+    private final int MAP_SIZE = 300;
 
 
     @PostConstruct
@@ -59,6 +61,51 @@ public class FindMapWayUtil {
             BufferedImage element = ImageUtil.readImage(fileName);
             elementImgMap.put(i, element);
         }
+    }
+
+    public FindPositionResponse searchPosition(int startX, int startY, int[][] match) {
+        int height = match.length;
+        int width = match[0].length;
+        FindPositionResponse response = new FindPositionResponse();
+        for (int i = startY; i + height < MAP_SIZE; i++) {
+            for (int j = startX; j + width < MAP_SIZE; j++) {
+                boolean result = isMatch(j, i, match);
+                if (result) {
+                    response.setSearchPosition(new Point(i + 1, j + 1));
+                    response.setHasNext(true);
+                    response.setFindMatch(true);
+                    response.setLocalMap(genLocalMap(new Point(i + LOCAL_MAP_WIDTH / 2, j + LOCAL_MAP_WIDTH / 2)));
+                    return response;
+                }
+            }
+        }
+        return response;
+    }
+
+    public boolean isMatch(int x, int y, int[][] match) {
+        int height = match.length;
+        int width = match[0].length;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int toMatch = match[i][j];
+                // 未探索
+                if (toMatch == 0) {
+                    continue;
+                }
+                int target = MORI_MAP[x + i][y + j];
+                if (target == toMatch) {
+                    continue;
+                }
+                //空地
+                JSONObject toJson = MapElement.getElement("" + toMatch);
+                JSONObject targetJson = MapElement.getElement("" + target);
+                if (toMatch != 15 && target != 15 && !toJson.getBoolean("reach") && !targetJson.getBoolean("reach")) {
+                    continue;
+                }
+                return false;
+            }
+        }
+        return true;
     }
 
     public String genLocalMap(Point point) {
@@ -95,10 +142,10 @@ public class FindMapWayUtil {
                 }
                 if (type == 2 || type == 19) {
                     Graphics2D pen = newEle.createGraphics();
-                    pen.setColor(new Color(255, 255, 255));
+                    pen.setColor(new Color(255, 255, 255, 255));
                     pen.setFont(new Font(null, Font.BOLD, 10));
-                    pen.drawString(String.format("x %d", np.x+1), 0, 11);
-                    pen.drawString(String.format("y %d", np.y+1), 0, 22);
+                    pen.drawString(String.format("x %d", np.x + 1), 0, 11);
+                    pen.drawString(String.format("y %d", np.y + 1), 0, 22);
                 }
 //                pen.drawImage(newEle,0,0,ELE_SIZE,ELE_SIZE,null);
                 for (int l = 0; l < ELE_SIZE; l++) {

@@ -38,13 +38,15 @@ public class MsgAnswerRouter {
                            @Autowired SubscribeService subscribeService,
                            @Autowired UpdateBoxPositionAnswerService updateBoxPositionAnswerService,
                            @Autowired GetKeyConfigAnswerService getKeyConfigAnswerService,
-                           @Autowired GetLocalMapService getLocalMapService) {
+                           @Autowired GetLocalMapService getLocalMapService,
+                           @Autowired FindPositionService findPositionService) {
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
         msgAnswerBaseServiceList.add(moriGameFindPathAnswerService);
         msgAnswerBaseServiceList.add(subscribeService);
         msgAnswerBaseServiceList.add(updateBoxPositionAnswerService);
         msgAnswerBaseServiceList.add(getKeyConfigAnswerService);
         msgAnswerBaseServiceList.add(getLocalMapService);
+        msgAnswerBaseServiceList.add(findPositionService);
     }
 
     public Response<WxSubMsgResponseDTO> process(WxSubMsgDTO wxSubMsgDTO) {
