@@ -64,6 +64,8 @@ public class FindMapWayUtil {
     }
 
     public FindPositionResponse searchPosition(int startX, int startY, int[][] match) {
+        startX = Math.min(299, Math.max(0, startX));
+        startY = Math.min(299, Math.max(0, startY));
         int height = match.length;
         int width = match[0].length;
         FindPositionResponse response = new FindPositionResponse();
@@ -83,6 +85,9 @@ public class FindMapWayUtil {
     }
 
     public boolean isMatch(int x, int y, int[][] match) {
+        if (x == 248 && y == 249) {
+            System.out.println(x);
+        }
         int height = match.length;
         int width = match[0].length;
         for (int i = 0; i < height; i++) {
@@ -92,7 +97,10 @@ public class FindMapWayUtil {
                 if (toMatch == 0) {
                     continue;
                 }
-                int target = MORI_MAP[x + i][y + j];
+                int target = MORI_MAP[y + i][x + j];
+                if (toMatch == 2 && target == 19) {
+                    continue;
+                }
                 if (target == toMatch) {
                     continue;
                 }
