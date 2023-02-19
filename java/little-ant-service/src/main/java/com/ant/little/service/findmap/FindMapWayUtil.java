@@ -69,14 +69,14 @@ public class FindMapWayUtil {
         int height = match.length;
         int width = match[0].length;
         FindPositionResponse response = new FindPositionResponse();
-        for (int i = startY; i + height < MAP_SIZE; i++) {
-            for (int j = startX; j + width < MAP_SIZE; j++) {
-                boolean result = isMatch(j, i, match);
+        for (int y = startY; y + height < MAP_SIZE; y++) {
+            for (int x = startX; x + width < MAP_SIZE; x++) {
+                boolean result = isMatch(x, y, match);
                 if (result) {
-                    response.setSearchPosition(new Point(i + 1, j + 1));
+                    response.setSearchPosition(new Point(x + 1, y + 1));
                     response.setHasNext(true);
                     response.setFindMatch(true);
-                    response.setLocalMap(genLocalMap(new Point(i + LOCAL_MAP_WIDTH / 2, j + LOCAL_MAP_WIDTH / 2)));
+                    response.setLocalMap(genLocalMap(new Point(x + LOCAL_MAP_WIDTH / 2 , y + LOCAL_MAP_WIDTH / 2 )));
                     return response;
                 }
             }
@@ -85,7 +85,7 @@ public class FindMapWayUtil {
     }
 
     public boolean isMatch(int x, int y, int[][] match) {
-        if (x == 248 && y == 249) {
+        if (x == 0 && y == 35) {
             System.out.println(x);
         }
         int height = match.length;
@@ -125,13 +125,13 @@ public class FindMapWayUtil {
         p.x -= LOCAL_MAP_WIDTH / 2 + 1;
         p.y -= LOCAL_MAP_HEIGHT / 2 + 1;
         if (p.x <= 0) {
-            p.x = 1;
+            p.x = 0;
         }
         if (p.x >= 300 - LOCAL_MAP_WIDTH) {
             p.x = 300 - LOCAL_MAP_WIDTH;
         }
         if (p.y <= 0) {
-            p.y = 1;
+            p.y = 0;
         }
         if (p.y >= 300 - LOCAL_MAP_HEIGHT) {
             p.y = 300 - LOCAL_MAP_HEIGHT;
