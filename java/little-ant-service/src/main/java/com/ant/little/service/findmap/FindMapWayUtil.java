@@ -70,7 +70,11 @@ public class FindMapWayUtil {
         int width = match[0].length;
         FindPositionResponse response = new FindPositionResponse();
         for (int y = startY; y + height < MAP_SIZE; y++) {
-            for (int x = startX; x + width < MAP_SIZE; x++) {
+            int x = 0;
+            if(y == startY) {
+                x = startX;
+            }
+            for (; x + width < MAP_SIZE; x++) {
                 boolean result = isMatch(x, y, match);
                 if (result) {
                     response.setSearchPosition(new Point(x + 1, y + 1));
@@ -85,9 +89,6 @@ public class FindMapWayUtil {
     }
 
     public boolean isMatch(int x, int y, int[][] match) {
-        if (x == 0 && y == 35) {
-            System.out.println(x);
-        }
         int height = match.length;
         int width = match[0].length;
         for (int i = 0; i < height; i++) {
