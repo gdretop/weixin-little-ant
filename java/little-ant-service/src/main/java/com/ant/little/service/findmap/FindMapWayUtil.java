@@ -64,8 +64,8 @@ public class FindMapWayUtil {
     }
 
     public FindPositionResponse searchPosition(int startX, int startY, int[][] match) {
-        startX = Math.min(299, Math.max(0, startX));
-        startY = Math.min(299, Math.max(0, startY));
+        startX = Math.min(299, Math.max(0, startX - 1));
+        startY = Math.min(299, Math.max(0, startY - 1));
         int height = match.length;
         int width = match[0].length;
         FindPositionResponse response = new FindPositionResponse();
@@ -76,7 +76,7 @@ public class FindMapWayUtil {
                     response.setSearchPosition(new Point(x + 1, y + 1));
                     response.setHasNext(true);
                     response.setFindMatch(true);
-                    response.setLocalMap(genLocalMap(new Point(x + LOCAL_MAP_WIDTH / 2 , y + LOCAL_MAP_WIDTH / 2 )));
+                    response.setLocalMap(genLocalMap(new Point(x + LOCAL_MAP_WIDTH / 2, y + LOCAL_MAP_WIDTH / 2)));
                     return response;
                 }
             }
@@ -101,13 +101,23 @@ public class FindMapWayUtil {
                 if (toMatch == 2 && target == 19) {
                     continue;
                 }
+                // 相等继续
                 if (target == toMatch) {
                     continue;
                 }
+                // 岩石必须相等
+                if (toMatch == 15 || target == 15) {
+                    return false;
+                }
+                // 栅栏必须相等
+                if (toMatch == 1 || target == 1) {
+                    return false;
+                }
+
                 //空地
                 JSONObject toJson = MapElement.getElement("" + toMatch);
                 JSONObject targetJson = MapElement.getElement("" + target);
-                if (toMatch != 15 && target != 15 && !toJson.getBoolean("reach") && !targetJson.getBoolean("reach")) {
+                if (!toJson.getBoolean("reach") && !targetJson.getBoolean("reach")) {
                     continue;
                 }
                 return false;

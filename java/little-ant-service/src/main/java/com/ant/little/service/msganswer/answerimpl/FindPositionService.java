@@ -43,7 +43,7 @@ public class FindPositionService implements MsgAnswerBaseService {
     public Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO) {
         String content = wxSubMsgDTO.getContent();
         FindPositionRequest request = JSONObject.parseObject(content, FindPositionRequest.class);
-        FindPositionResponse response = findMapWayUtil.searchPosition(request.getStartX() - 1, request.getStartY() - 1, request.getMatchData());
+        FindPositionResponse response = findMapWayUtil.searchPosition(request.getStartX(), request.getStartY(), request.getMatchData());
         WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
         wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.JSON.getName());
         wxSubMsgResponseDTO.setContent(JSON.toJSONString(response));
