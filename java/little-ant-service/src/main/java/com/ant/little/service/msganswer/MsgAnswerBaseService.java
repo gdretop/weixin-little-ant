@@ -21,8 +21,16 @@ public interface MsgAnswerBaseService {
 
     /**
      * 回复消息
+     *
      * @param wxSubMsgDTO
      * @return
      */
     Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO);
+
+    /**
+     * 获取服务名
+     *
+     * @return
+     */
+    String getName();
 }

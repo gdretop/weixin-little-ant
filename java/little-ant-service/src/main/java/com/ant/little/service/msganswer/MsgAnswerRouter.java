@@ -3,10 +3,9 @@ package com.ant.little.service.msganswer;
 import com.alibaba.fastjson.JSON;
 import com.ant.little.common.constents.ResponseTemplateConstants;
 import com.ant.little.common.model.Response;
-import com.ant.little.model.dto.RequestLogDTO;
-import com.ant.little.model.dto.WxSubMsgDTO;
-import com.ant.little.model.dto.WxSubMsgResponseDTO;
-import com.ant.little.model.dto.WxUserDTO;
+import com.ant.little.common.util.DateUtil;
+import com.ant.little.model.dto.*;
+import com.ant.little.service.counter.RequestCounterAndLimitService;
 import com.ant.little.service.msganswer.answerimpl.*;
 import com.ant.little.service.store.RequestLogService;
 import com.ant.little.service.store.WxUserService;
@@ -32,6 +31,8 @@ public class MsgAnswerRouter {
     private RequestLogService requestLogService;
     @Autowired
     private WxUserService wxUserService;
+    @Autowired
+    private RequestCounterAndLimitService requestRequestCounterAndLimitService;
 
     public MsgAnswerRouter(@Autowired MoriGameBestWayAnswerService moriGameWayPathAnswerService,
                            @Autowired MoriGameFindPathAnswerService moriGameFindPathAnswerService,
@@ -73,7 +74,21 @@ public class MsgAnswerRouter {
                     return Response.newFailure(e.getMessage(), "");
                 }
                 if (matchResult) {
+                    // 成功调用次数计数器
+                    RequestCounterDTO requestCounterDTO = new RequestCounterDTO();
+                    requestCounterDTO.setAppid(wxSubMsgDTO.getWxAppid());
+                    requestCounterDTO.setOpenId(wxSubMsgDTO.getWxOpenId());
+                    requestCounterDTO.setType(wxSubMsgDTO.getToUserName());
+                    requestCounterDTO.setRequestKey(service.getName());
+                    requestCounterDTO.setBizDate(DateUtil.getDateString("yyyyMMdd"));
+                    Response limitResponse = requestRequestCounterAndLimitService.limitCount(requestCounterDTO);
+                    if (limitResponse.isFailed()) {
+                        return limitResponse;
+                    }
                     responseAnswer = service.answer(wxSubMsgDTO);
+                    if (responseAnswer.isSuccess()) {
+                        requestRequestCounterAndLimitService.addCount(requestCounterDTO);
+                    }
                     return responseAnswer;
                 }
             }

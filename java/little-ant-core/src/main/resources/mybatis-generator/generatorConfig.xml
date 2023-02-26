@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
 <!--<!DOCTYPE generatorConfiguration-->
 <!--        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"-->
 <!--        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">-->
-<generatorConfiguration>
+<!--<generatorConfiguration>-->
 <!--    <properties resource="mybatis-generator/generator.properties"/>-->
 <!--    &lt;!&ndash;    注释掉&ndash;&gt;-->
 <!--    &lt;!&ndash;    <classPathEntry location="${driverLocation}"/>&ndash;&gt;-->
@@ -43,11 +43,16 @@
 <!--        </javaClientGenerator>-->
 
 <!--        &lt;!&ndash; tableName：数据库中的表名或视图名；domainObjectName：生成的实体类的类名&ndash;&gt;-->
-<!--        <table tableName="request_log" domainObjectName="RequestLogDO">-->
-<!--            <columnOverride column="request_info" javaType="java.lang.String" jdbcType="VARCHAR" />-->
-<!--            <columnOverride column="response_info" javaType="java.lang.String" jdbcType="VARCHAR" />-->
-<!--        </table>-->
-<!--        <table tableName="wx_user" schema="springboot_demo" domainObjectName="WxUserDO"/>-->
+<!--&lt;!&ndash;        <table tableName="request_log" domainObjectName="RequestLogDO">&ndash;&gt;-->
+<!--&lt;!&ndash;            <columnOverride column="request_info" javaType="java.lang.String" jdbcType="VARCHAR" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <columnOverride column="response_info" javaType="java.lang.String" jdbcType="VARCHAR" />&ndash;&gt;-->
+<!--&lt;!&ndash;        </table>&ndash;&gt;-->
+<!--&lt;!&ndash;        <table tableName="wx_user" schema="springboot_demo" domainObjectName="WxUserDO"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        <table tableName="wx_user" schema="springboot_demo" domainObjectName="WxUserDO"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;        <table tableName="member_config" schema="springboot_demo" domainObjectName="MemberConfigDO"/>&ndash;&gt;-->
+<!--        <table tableName="member_info" schema="springboot_demo" domainObjectName="MemberInfoDO"/>-->
+<!--&lt;!&ndash;        <table tableName="request_counter" schema="springboot_demo" domainObjectName="RequestCounterDO"/>&ndash;&gt;-->
 
 <!--    </context>-->
-</generatorConfiguration>
+<!--</generatorConfiguration>-->

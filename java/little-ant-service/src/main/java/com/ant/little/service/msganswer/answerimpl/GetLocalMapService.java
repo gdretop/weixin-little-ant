@@ -25,12 +25,18 @@ public class GetLocalMapService implements MsgAnswerBaseService {
     private final Logger logger = LoggerFactory.getLogger(GetLocalMapService.class);
     @Autowired
     private FindMapWayUtil findMapWayUtil;
+
+    @Override
+    public String getName() {
+        return "GetLocalMap";
+    }
+
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if(wxSubMsgDTO.getContent().contains("局部图")){
+        if (wxSubMsgDTO.getContent().contains("局部图")) {
             return true;
         }
         return false;

@@ -26,6 +26,10 @@ public class GetKeyConfigAnswerService implements MsgAnswerBaseService {
     @Autowired
     private KeyConfigService keyConfigService;
 
+    @Override
+    public String getName() {
+        return "GetKeyConfig";
+    }
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {

@@ -64,7 +64,7 @@ public class RequestLogService {
 
     public Response<RequestLogDTO> update(RequestLogDTO requestLogDTO) {
         RequestLogDO requestLogDO = dto2DO(requestLogDTO);
-        int effect = requestLogDOMapper.updateByPrimaryKey(requestLogDO);
+        int effect = requestLogDOMapper.updateByPrimaryKeySelective(requestLogDO);
         requestLogDTO.setId(requestLogDO.getId());
         if (effect == 1) {
             return Response.newSuccess(requestLogDTO);

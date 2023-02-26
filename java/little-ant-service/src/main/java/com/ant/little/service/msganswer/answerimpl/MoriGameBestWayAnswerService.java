@@ -40,6 +40,12 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             .build();
     @Autowired
     private FindMapWayUtil findMapWayUtil;
+
+    @Override
+    public String getName() {
+        return "MoriGameBestWay";
+    }
+
     private final static String FORMAT_INFO = "正确格式示例如下,输入5行,第二行是当前坐标，3到5行是3个宝箱坐标,空格分割坐标:\n" +
             "最佳路线\n" +
             "202 213\n" +
@@ -105,7 +111,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             String cacheResult = localCache.getIfPresent(content);
             if (cacheResult != null) {
                 logger.info("找到缓存信息");
-                cacheResult = dataProcess(cacheResult,wxSubMsgDTO);
+                cacheResult = dataProcess(cacheResult, wxSubMsgDTO);
                 WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
                 wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
                 wxSubMsgResponseDTO.setContent(cacheResult);
@@ -122,7 +128,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
             String result = String.join("\n", resultList);
             localCache.put(content, result);
-            result = dataProcess(result,wxSubMsgDTO);
+            result = dataProcess(result, wxSubMsgDTO);
             wxSubMsgResponseDTO.setContent(result);
             return Response.newSuccess(wxSubMsgResponseDTO);
         } catch (Exception e) {
@@ -130,6 +136,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
             return Response.newFailure(ResponseTemplateConstants.SERVER_ERROR, "");
         }
     }
+
     private String dataProcess(String result, WxSubMsgDTO wxSubMsgDTO) {
         if (!"wx_applet_best_way".equals(wxSubMsgDTO.getToUserName())) {
             result = "推荐使用小程序工具,菜单栏->生存之路->宝箱工具\n\n" + result;

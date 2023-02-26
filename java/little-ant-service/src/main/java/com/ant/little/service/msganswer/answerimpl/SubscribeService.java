@@ -26,6 +26,10 @@ public class SubscribeService implements MsgAnswerBaseService {
     @Autowired
     private EnvConfig envConfig;
 
+    @Override
+    public String getName() {
+        return "Subscribe";
+    }
 
     @Override
     public boolean isMatch(WxSubMsgDTO wxSubMsgDTO) {

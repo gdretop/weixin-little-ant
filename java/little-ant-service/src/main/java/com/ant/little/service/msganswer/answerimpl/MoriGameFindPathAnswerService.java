@@ -35,6 +35,11 @@ public class MoriGameFindPathAnswerService implements MsgAnswerBaseService {
     @Autowired
     private FindMapWayUtil findMapWayUtil;
 
+    @Override
+    public String getName() {
+        return "MoriGameFindPath";
+    }
+
     private Cache<String, String> localCache = CacheBuilder.newBuilder()
             .concurrencyLevel(4)
             .initialCapacity(100)

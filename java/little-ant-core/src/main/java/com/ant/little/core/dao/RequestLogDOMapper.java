@@ -2,9 +2,14 @@ package com.ant.little.core.dao;
 
 import com.ant.little.core.domain.RequestLogDO;
 import com.ant.little.core.domain.RequestLogDOExample;
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Mapper
+@Repository
 public interface RequestLogDOMapper {
     long countByExample(RequestLogDOExample example);
 

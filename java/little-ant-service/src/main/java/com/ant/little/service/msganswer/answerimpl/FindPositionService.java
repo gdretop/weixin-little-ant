@@ -7,9 +7,9 @@ import com.ant.little.common.model.Response;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.service.findmap.FindMapWayUtil;
+import com.ant.little.service.model.FindPositionRequest;
 import com.ant.little.service.model.FindPositionResponse;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
-import com.ant.little.service.model.FindPositionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +49,10 @@ public class FindPositionService implements MsgAnswerBaseService {
         wxSubMsgResponseDTO.setContent(JSON.toJSONString(response));
         wxSubMsgResponseDTO.setSaveResponse(false);
         return Response.newSuccess(wxSubMsgResponseDTO);
+    }
+
+    @Override
+    public String getName() {
+        return "FindPosition";
     }
 }

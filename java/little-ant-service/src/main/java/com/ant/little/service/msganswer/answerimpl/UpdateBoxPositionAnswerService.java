@@ -5,13 +5,11 @@ import com.ant.little.common.constents.KeyConfigTypeEnum;
 import com.ant.little.common.constents.WxMsgTypeEnum;
 import com.ant.little.common.model.Response;
 import com.ant.little.common.util.DigitalUtil;
-import com.ant.little.core.config.EnvConfig;
 import com.ant.little.model.dto.KeyConfigDTO;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
 import com.ant.little.service.store.KeyConfigService;
-import com.sun.org.apache.bcel.internal.generic.ATHROW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,11 @@ public class UpdateBoxPositionAnswerService implements MsgAnswerBaseService {
     @PostConstruct
     public void init() {
         adminList.add("oUHmw6tLdXBdki3CEVc-u-iYDEdY");
+    }
+
+    @Override
+    public String getName() {
+        return "UpdateBoxPosition";
     }
 
     @Override
