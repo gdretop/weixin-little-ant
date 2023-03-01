@@ -8,6 +8,7 @@ import com.ant.little.common.util.DigitalUtil;
 import com.ant.little.model.dto.KeyConfigDTO;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
+import com.ant.little.service.config.AdminConfig;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
 import com.ant.little.service.store.KeyConfigService;
 import org.slf4j.Logger;
@@ -29,14 +30,10 @@ import java.util.List;
 public class UpdateBoxPositionAnswerService implements MsgAnswerBaseService {
 
     private final Logger logger = LoggerFactory.getLogger(UpdateBoxPositionAnswerService.class);
-    private List<String> adminList = new ArrayList<>();
     @Autowired
     private KeyConfigService keyConfigService;
-
-    @PostConstruct
-    public void init() {
-        adminList.add("oUHmw6tLdXBdki3CEVc-u-iYDEdY");
-    }
+    @Autowired
+    private AdminConfig adminConfig;
 
     @Override
     public String getName() {
@@ -51,7 +48,7 @@ public class UpdateBoxPositionAnswerService implements MsgAnswerBaseService {
         if (!wxSubMsgDTO.getContent().startsWith("更新宝箱坐标")) {
             return false;
         }
-        if (!adminList.contains(wxSubMsgDTO.getWxOpenId())) {
+        if (!adminConfig.isAdmin(wxSubMsgDTO.getWxOpenId())) {
             return false;
         }
         try {

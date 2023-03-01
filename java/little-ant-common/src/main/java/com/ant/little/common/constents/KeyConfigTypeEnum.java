@@ -7,5 +7,8 @@ package com.ant.little.common.constents;
  * @Version 1.0
  **/
 public enum KeyConfigTypeEnum {
-    MORI_GAME;
+    MORI_GAME,
+    VIP,
+    NORMAL,
+    gh_d578112e1577;
 }

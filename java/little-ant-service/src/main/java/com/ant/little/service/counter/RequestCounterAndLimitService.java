@@ -2,6 +2,7 @@ package com.ant.little.service.counter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ant.little.common.constents.KeyConfigTypeEnum;
 import com.ant.little.common.constents.MemberTypeEnum;
 import com.ant.little.common.model.Response;
 import com.ant.little.model.dto.KeyConfigDTO;
@@ -14,6 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: little-ant
@@ -30,8 +35,20 @@ public class RequestCounterAndLimitService {
     private MemberInfoService memberInfoService;
     @Autowired
     private KeyConfigService keyConfigService;
+    private List<String> limitRequest = new ArrayList<>();
+
+    @PostConstruct
+    public void init() {
+        limitRequest.add("FindPosition");
+        limitRequest.add("GetLocalMap");
+        limitRequest.add("MoriGameBestWay");
+        limitRequest.add("MoriGameFindPath");
+    }
 
     public Response limitCount(RequestCounterDTO requestCounterDTO) {
+        if (!limitRequest.contains(requestCounterDTO.getRequestKey())) {
+            return Response.newSuccess("");
+        }
         RequestCounterDTO requestCounterDTO1 = preCheck(requestCounterDTO);
         if (requestCounterDTO1.getRequestNum() >= requestCounterDTO1.getLimitNum()) {
             String msg = String.format("该功能今日已调用%d次,达到上限,请明天再使用", requestCounterDTO1.getRequestNum());
@@ -41,6 +58,9 @@ public class RequestCounterAndLimitService {
     }
 
     public int addCount(RequestCounterDTO requestCounterDTO) {
+        if (!limitRequest.contains(requestCounterDTO.getRequestKey())) {
+            return 0;
+        }
         return requestCounterService.addCount(requestCounterDTO);
     }
 
@@ -58,6 +78,10 @@ public class RequestCounterAndLimitService {
         memberInfoDTO.setType(MemberTypeEnum.SERVICE_MEMBER.name());
         memberInfoDTO.setIsValid(1);
         MemberInfoDTO memberInfoResult = memberInfoService.query(memberInfoDTO);
+        if (memberInfoResult != null && memberInfoResult.getEndTime().getTime() < System.currentTimeMillis()) {
+            memberInfoService.inValidate(memberInfoResult);
+            memberInfoResult = null;
+        }
         if (memberInfoResult != null) {
             String json = memberInfoResult.getConfigJson();
             JSONObject jsonObject = JSON.parseObject(json);
@@ -74,7 +98,11 @@ public class RequestCounterAndLimitService {
     private RequestCounterDTO createRequestCounter(boolean isVip, RequestCounterDTO requestCounterDTO) {
         String type = requestCounterDTO.getType();
         if (isVip) {
-            type = type + "_vip";
+            type = KeyConfigTypeEnum.VIP.name();
+        } else if (type.equals(KeyConfigTypeEnum.gh_d578112e1577.name())) {
+
+        } else {
+            type = KeyConfigTypeEnum.NORMAL.name();
         }
         Response<KeyConfigDTO> response = keyConfigService.getKey(type, requestCounterDTO.getRequestKey());
         requestCounterDTO.setRequestNum(0);
@@ -82,6 +110,9 @@ public class RequestCounterAndLimitService {
             KeyConfigDTO keyConfigDTO = response.getData();
             int limit = Integer.parseInt(keyConfigDTO.getValue());
             requestCounterDTO.setLimitNum(limit);
+        } else {
+            //兜底10次
+            requestCounterDTO.setLimitNum(10);
         }
         requestCounterService.insert(requestCounterDTO);
         return requestCounterService.query(requestCounterDTO);

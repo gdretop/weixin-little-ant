@@ -7,9 +7,13 @@ package com.ant.little.common.model;
  * @Version 1.0
  **/
 public class CommonCacheObj<T> {
-    public T data;
+    public T data = null;
 
     public CommonCacheObj(T data) {
         this.data = data;
+    }
+
+    public CommonCacheObj() {
+
     }
 }

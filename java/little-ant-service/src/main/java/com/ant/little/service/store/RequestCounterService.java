@@ -105,6 +105,26 @@ public class RequestCounterService {
         return null;
     }
 
+    /**
+     * 删除一个用户当天的所有计数器
+     *
+     * @param appId
+     * @param openId
+     * @param bizDate
+     */
+    public void deleteUserCounter(String appId, String openId, String bizDate) {
+        RequestCounterDOExample example = new RequestCounterDOExample();
+        example.createCriteria().andEnvEqualTo(envConfig.getCurEnv()).andAppidEqualTo(appId)
+                .andOpenIdEqualTo(openId).andBizDateEqualTo(bizDate);
+        List<RequestCounterDO> result = requestCounterDOMapper.selectByExample(example);
+        for (RequestCounterDO item : result) {
+            RequestCounterDTO dto = do2Dto(item);
+            requestCounterDOMapper.deleteByPrimaryKey(dto.getId());
+            String key = genKey(dto);
+            localCache.invalidate(key);
+        }
+    }
+
     private String genKey(RequestCounterDTO requestCounterDTO) {
         String key = String.format("%s-%s-%s-%s-%s-%s", requestCounterDTO.getEnv(), requestCounterDTO.getAppid(),
                 requestCounterDTO.getOpenId(), requestCounterDTO.getType(), requestCounterDTO.getRequestKey(),

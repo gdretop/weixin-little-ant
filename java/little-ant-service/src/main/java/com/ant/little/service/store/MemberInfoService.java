@@ -61,7 +61,7 @@ public class MemberInfoService {
     }
 
     /**
-     * 失效会员信息，并清理缓存
+     * 失效会员信息，并清理缓存,同时重新加载
      *
      * @param memberInfoDTO
      * @return
@@ -69,19 +69,13 @@ public class MemberInfoService {
     public Response<MemberInfoDTO> inValidate(MemberInfoDTO memberInfoDTO) {
         String env = envConfig.getCurEnv();
         memberInfoDTO.setEnv(env);
-        MemberInfoDTO result = query(memberInfoDTO);
-        if (result != null) {
-            MemberInfoDO update = new MemberInfoDO();
-            update.setId(result.getId());
-            update.setIsValid(0);
-            memberInfoDOMapper.updateByPrimaryKeySelective(update);
-            result.setIsValid(0);
-            String key = genKey(memberInfoDTO);
-            localCache.invalidate(key);
-            return Response.newSuccess(result);
-        }
-        logger.error("找不到会员信息 {}", JSON.toJSONString(memberInfoDTO));
-        return Response.newFailure("找不到指定会员信息", "");
+        MemberInfoDO update = new MemberInfoDO();
+        update.setId(memberInfoDTO.getId());
+        update.setIsValid(0);
+        memberInfoDOMapper.updateByPrimaryKeySelective(update);
+        String key = genKey(memberInfoDTO);
+        localCache.invalidate(key);
+        return Response.newSuccess(memberInfoDTO);
     }
 
     /**
@@ -119,6 +113,7 @@ public class MemberInfoService {
 
     private MemberInfoDO dto2DO(MemberInfoDTO memberInfoDTO) {
         MemberInfoDO memberInfoDO = new MemberInfoDO();
+        memberInfoDO.setId(memberInfoDTO.getId());
         memberInfoDO.setEnv(memberInfoDTO.getEnv());
         memberInfoDO.setAppid(memberInfoDTO.getAppid());
         memberInfoDO.setOpenId(memberInfoDTO.getOpenId());
