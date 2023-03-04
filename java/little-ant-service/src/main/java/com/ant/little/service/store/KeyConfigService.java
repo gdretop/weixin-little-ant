@@ -43,6 +43,10 @@ public class KeyConfigService {
             .maximumSize(5000)
             .build();
 
+    public void invalidateAll() {
+        localCache.invalidateAll();
+    }
+
     public Response<KeyConfigDTO> insert(KeyConfigDTO keyConfigDTO) {
         String env = envConfig.getCurEnv();
         keyConfigDTO.setEnv(env);

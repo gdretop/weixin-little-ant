@@ -42,6 +42,10 @@ public class RequestCounterService {
             .maximumSize(5000)
             .build();
 
+    public void invalidateAll() {
+        localCache.invalidateAll();
+    }
+
     /**
      * 插入一条计数控制器
      *

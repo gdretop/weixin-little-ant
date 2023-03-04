@@ -60,6 +60,10 @@ public class MemberInfoService {
         }
     }
 
+    public void invalidateAll() {
+        localCache.invalidateAll();
+    }
+
     /**
      * 失效会员信息，并清理缓存,同时重新加载
      *

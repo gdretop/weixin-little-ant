@@ -46,7 +46,8 @@ public class MsgAnswerRouter {
                            @Autowired QueryMemberConfigAnswerService queryMemberConfigAnswerService,
                            @Autowired UpdateConfigAnswerService updateConfigAnswerService,
                            @Autowired QueryUserInfoAnswerService queryUserInfoAnswerService,
-                           @Autowired AddRequestNumAnswerService addRequestNumAnswerService) {
+                           @Autowired AddRequestNumAnswerService addRequestNumAnswerService,
+                           @Autowired ClearCacheService clearCacheService) {
         msgAnswerBaseServiceList.add(addRequestNumAnswerService);
         msgAnswerBaseServiceList.add(updateConfigAnswerService);
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
@@ -60,6 +61,7 @@ public class MsgAnswerRouter {
         msgAnswerBaseServiceList.add(createMemberAnswerService);
         msgAnswerBaseServiceList.add(queryMemberConfigAnswerService);
         msgAnswerBaseServiceList.add(queryUserInfoAnswerService);
+        msgAnswerBaseServiceList.add(clearCacheService);
     }
 
     public Response<WxSubMsgResponseDTO> process(WxSubMsgDTO wxSubMsgDTO) {
