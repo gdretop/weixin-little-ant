@@ -57,10 +57,12 @@ public class AddRequestNumAnswerService implements MsgAnswerBaseService {
         requestCounterDTO.setRequestKey(jsonObject.getString("requestKey"));
         requestCounterDTO.setType(jsonObject.getString("requestKey"));
         RequestCounterDTO queryResult = requestCounterService.query(requestCounterDTO);
-        RequestCounterDTO update = new RequestCounterDTO();
-        update.setId(queryResult.getId());
-        update.setLimitNum(queryResult.getLimitNum() + 10);
-        requestCounterService.updateById(update);
+        if(queryResult != null) {
+            RequestCounterDTO update = new RequestCounterDTO();
+            update.setId(queryResult.getId());
+            update.setLimitNum(queryResult.getLimitNum() + 10);
+            requestCounterService.updateById(update);
+        }
         WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
         wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
         wxSubMsgResponseDTO.setContent("更新成功");

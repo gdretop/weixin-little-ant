@@ -19,7 +19,7 @@ public class AdminConfig {
     @PostConstruct
     public void init() {
         adminList.add("oUHmw6tLdXBdki3CEVc-u-iYDEdY");
-        adminList.add("o-qV15Pk_wgLCRELTYPOQJGQYlAI ");
+        adminList.add("o-qV15Pk_wgLCRELTYPOQJGQYlAI");
         adminList.add("o-qV15FWaxfgZl8I8eiKy0a0om9g");
     }
 
