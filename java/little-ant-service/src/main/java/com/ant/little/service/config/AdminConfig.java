@@ -23,8 +23,8 @@ public class AdminConfig {
         adminList.add("o-qV15FWaxfgZl8I8eiKy0a0om9g");
     }
 
-    public boolean isAdmin(String user) {
-        return adminList.contains(user);
+    public boolean isAdmin(String openId) {
+        return adminList.contains(openId);
     }
 
 }

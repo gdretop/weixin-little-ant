@@ -36,7 +36,7 @@ public class GetLocalMapService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (wxSubMsgDTO.getContent().contains("局部图")) {
+        if (wxSubMsgDTO.getContent().contains("局部图") || wxSubMsgDTO.getContent().contains("GetLocalMap")) {
             return true;
         }
         return false;

@@ -46,7 +46,7 @@ public class UpdateConfigAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().contains("更新配置")) {
+        if (!wxSubMsgDTO.getContent().contains("UpdateConfig")) {
             return false;
         }
         return true;

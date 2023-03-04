@@ -31,7 +31,7 @@ public class BindMemberAnswerService implements MsgAnswerBaseService {
 
     @Override
     public String getName() {
-        return "BindMemberAnswer";
+        return "BindMember";
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BindMemberAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().contains("绑定会员配置")) {
+        if (!wxSubMsgDTO.getContent().contains("BindMember")) {
             return false;
         }
         return true;

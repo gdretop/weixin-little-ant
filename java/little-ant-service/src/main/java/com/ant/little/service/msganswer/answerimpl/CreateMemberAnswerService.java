@@ -44,7 +44,7 @@ public class CreateMemberAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().contains("创建会员配置")) {
+        if (!wxSubMsgDTO.getContent().contains("CreateMember")) {
             return false;
         }
         return true;

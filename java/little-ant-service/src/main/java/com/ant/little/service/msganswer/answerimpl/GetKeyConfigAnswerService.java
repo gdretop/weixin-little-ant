@@ -36,7 +36,7 @@ public class GetKeyConfigAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.TEXT.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().startsWith("获取配置")) {
+        if (!wxSubMsgDTO.getContent().startsWith("获取配置") && !wxSubMsgDTO.getContent().startsWith("GetKeyConfig")) {
             return false;
         }
         String[] data = wxSubMsgDTO.getContent().split("\n");

@@ -44,7 +44,10 @@ public class MsgAnswerRouter {
                            @Autowired BindMemberAnswerService bindMemberAnswerService,
                            @Autowired CreateMemberAnswerService createMemberAnswerService,
                            @Autowired QueryMemberConfigAnswerService queryMemberConfigAnswerService,
-                           @Autowired UpdateConfigAnswerService updateConfigAnswerService) {
+                           @Autowired UpdateConfigAnswerService updateConfigAnswerService,
+                           @Autowired QueryUserInfoAnswerService queryUserInfoAnswerService,
+                           @Autowired AddRequestNumAnswerService addRequestNumAnswerService) {
+        msgAnswerBaseServiceList.add(addRequestNumAnswerService);
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
         msgAnswerBaseServiceList.add(moriGameFindPathAnswerService);
         msgAnswerBaseServiceList.add(subscribeService);
@@ -56,6 +59,7 @@ public class MsgAnswerRouter {
         msgAnswerBaseServiceList.add(createMemberAnswerService);
         msgAnswerBaseServiceList.add(queryMemberConfigAnswerService);
         msgAnswerBaseServiceList.add(updateConfigAnswerService);
+        msgAnswerBaseServiceList.add(queryUserInfoAnswerService);
     }
 
     public Response<WxSubMsgResponseDTO> process(WxSubMsgDTO wxSubMsgDTO) {

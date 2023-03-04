@@ -70,6 +70,11 @@ public class RequestCounterService {
         }
     }
 
+    public int updateById(RequestCounterDTO requestCounterDTO) {
+        RequestCounterDO requestCounterDO = dto2DO(requestCounterDTO);
+        return requestCounterDOMapper.updateByPrimaryKeySelective(requestCounterDO);
+    }
+
     /**
      * 增加一次请求记录
      *

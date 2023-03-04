@@ -33,7 +33,7 @@ public class FindPositionService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (wxSubMsgDTO.getContent().contains("坐标查询")) {
+        if (wxSubMsgDTO.getContent().contains("FindPosition") || wxSubMsgDTO.getContent().contains("坐标查询")) {
             return true;
         }
         return false;

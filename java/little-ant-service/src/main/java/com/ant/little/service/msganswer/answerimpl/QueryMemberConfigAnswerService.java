@@ -44,7 +44,7 @@ public class QueryMemberConfigAnswerService implements MsgAnswerBaseService {
         if (!WxMsgTypeEnum.JSON.getName().equals(wxSubMsgDTO.getMsgType())) {
             return false;
         }
-        if (!wxSubMsgDTO.getContent().contains("查询会员配置")) {
+        if (!wxSubMsgDTO.getContent().contains("QueryMemberConfig")) {
             return false;
         }
         return true;
