@@ -9,7 +9,7 @@ package com.ant.little.service.model;
 public class UserInfo {
     private int duration = 0;
     private boolean removeAd = false;
-    private boolean isVip = false;
+    private boolean vip = false;
     private boolean isAdmin = false;
     private int waitTime = 3000;
 
@@ -30,11 +30,11 @@ public class UserInfo {
     }
 
     public boolean isVip() {
-        return isVip;
+        return vip;
     }
 
     public void setVip(boolean vip) {
-        isVip = vip;
+        this.vip = vip;
     }
 
     public boolean isAdmin() {

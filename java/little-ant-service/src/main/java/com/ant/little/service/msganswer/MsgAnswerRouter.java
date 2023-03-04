@@ -48,6 +48,7 @@ public class MsgAnswerRouter {
                            @Autowired QueryUserInfoAnswerService queryUserInfoAnswerService,
                            @Autowired AddRequestNumAnswerService addRequestNumAnswerService) {
         msgAnswerBaseServiceList.add(addRequestNumAnswerService);
+        msgAnswerBaseServiceList.add(updateConfigAnswerService);
         msgAnswerBaseServiceList.add(moriGameWayPathAnswerService);
         msgAnswerBaseServiceList.add(moriGameFindPathAnswerService);
         msgAnswerBaseServiceList.add(subscribeService);
@@ -58,7 +59,6 @@ public class MsgAnswerRouter {
         msgAnswerBaseServiceList.add(bindMemberAnswerService);
         msgAnswerBaseServiceList.add(createMemberAnswerService);
         msgAnswerBaseServiceList.add(queryMemberConfigAnswerService);
-        msgAnswerBaseServiceList.add(updateConfigAnswerService);
         msgAnswerBaseServiceList.add(queryUserInfoAnswerService);
     }
 

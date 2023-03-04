@@ -70,7 +70,7 @@ public class UpdateConfigAnswerService implements MsgAnswerBaseService {
                 return Response.newFailure(response.getErrMsg(), "");
             }
         }
-        wxSubMsgResponseDTO.setContent("");
+        wxSubMsgResponseDTO.setContent("更新成功");
         return Response.newSuccess(wxSubMsgResponseDTO);
     }
 }
