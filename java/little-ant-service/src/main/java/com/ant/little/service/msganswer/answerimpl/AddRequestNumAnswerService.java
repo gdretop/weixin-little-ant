@@ -53,6 +53,9 @@ public class AddRequestNumAnswerService implements MsgAnswerBaseService {
         requestCounterDTO.setAppid(wxSubMsgDTO.getWxAppid());
         requestCounterDTO.setOpenId(wxSubMsgDTO.getWxOpenId());
         requestCounterDTO.setBizDate(DateUtil.getDateString("yyyyMMdd"));
+        JSONObject jsonObject = JSON.parseObject(wxSubMsgDTO.getContent());
+        requestCounterDTO.setRequestKey(jsonObject.getString("requestKey"));
+        requestCounterDTO.setType(jsonObject.getString("requestKey"));
         RequestCounterDTO queryResult = requestCounterService.query(requestCounterDTO);
         RequestCounterDTO update = new RequestCounterDTO();
         update.setId(queryResult.getId());
