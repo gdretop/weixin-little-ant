@@ -94,7 +94,7 @@ public class MemberInfoService {
         }
         MemberInfoDOExample example = new MemberInfoDOExample();
         example.createCriteria().andTypeEqualTo(memberInfoDTO.getType()).andAppidEqualTo(memberInfoDTO.getAppid())
-                .andOpenIdEqualTo(memberInfoDTO.getOpenId()).andIsValidEqualTo(1);
+                .andOpenIdEqualTo(memberInfoDTO.getOpenId()).andIsValidEqualTo(1).andEnvEqualTo(memberInfoDTO.getEnv());
         example.setOrderByClause(" end_time desc");
         List<MemberInfoDO> result = memberInfoDOMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(result)) {
