@@ -1,13 +1,13 @@
 package com.ant.little.service.counter;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ant.little.common.constents.KeyConfigTypeEnum;
 import com.ant.little.common.constents.MemberTypeEnum;
 import com.ant.little.common.model.Response;
 import com.ant.little.model.dto.KeyConfigDTO;
 import com.ant.little.model.dto.MemberInfoDTO;
 import com.ant.little.model.dto.RequestCounterDTO;
+import com.ant.little.service.model.UserInfo;
 import com.ant.little.service.store.KeyConfigService;
 import com.ant.little.service.store.MemberInfoService;
 import com.ant.little.service.store.RequestCounterService;
@@ -84,8 +84,8 @@ public class RequestCounterAndLimitService {
         }
         if (memberInfoResult != null) {
             String json = memberInfoResult.getConfigJson();
-            JSONObject jsonObject = JSON.parseObject(json);
-            if (jsonObject.getBoolean("isVip")) {
+            UserInfo userInfo = JSON.parseObject(json, UserInfo.class);
+            if (userInfo.isVip()) {
                 return createRequestCounter(true, requestCounterDTO);
             } else {
                 return createRequestCounter(false, requestCounterDTO);
