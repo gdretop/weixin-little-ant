@@ -22,7 +22,7 @@ public class SubscribeService implements MsgAnswerBaseService {
 
     private final Logger logger = LoggerFactory.getLogger(SubscribeService.class);
     private final static String CONTENT = "欢迎关注旺仔小蚂蚁!\n" +
-            "使用末日生存地图工具请点击菜单栏'介绍'按钮查看最新介绍文档,点击菜单栏->生存之路->宝箱攻略 查看详细使用说明";
+            "使用末日生存地图工具 点击菜单栏->生存之路 查看教程和工具地址";
     @Autowired
     private EnvConfig envConfig;
 
