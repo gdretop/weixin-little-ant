@@ -95,7 +95,7 @@ public class MsgAnswerRouter {
                     requestCounterDTO.setType(wxSubMsgDTO.getToUserName());
                     requestCounterDTO.setRequestKey(service.getName());
                     requestCounterDTO.setBizDate(DateUtil.getDateString("yyyyMMdd"));
-                    Response limitResponse = requestRequestCounterAndLimitService.limitCount(requestCounterDTO);
+                    Response limitResponse = requestRequestCounterAndLimitService.limitCount(requestCounterDTO, service.getName());
                     if (limitResponse.isFailed()) {
                         return limitResponse;
                     }

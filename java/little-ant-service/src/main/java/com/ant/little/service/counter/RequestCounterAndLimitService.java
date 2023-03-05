@@ -45,8 +45,8 @@ public class RequestCounterAndLimitService {
         limitRequest.add("MoriGameFindPath");
     }
 
-    public Response limitCount(RequestCounterDTO requestCounterDTO) {
-        if (!limitRequest.contains(requestCounterDTO.getRequestKey())) {
+    public Response limitCount(RequestCounterDTO requestCounterDTO, String serviceName) {
+        if (!limitRequest.contains(serviceName)) {
             return Response.newSuccess("");
         }
         RequestCounterDTO requestCounterDTO1 = preCheck(requestCounterDTO);
