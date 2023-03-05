@@ -183,4 +183,9 @@ public class RequestCounterService {
         requestCounterDO.setRequestNum(requestCounterDTO.getRequestNum());
         return requestCounterDO;
     }
+
+    public void invalidate(RequestCounterDTO queryResult) {
+        String key = genKey(queryResult);
+        localCache.invalidate(key);
+    }
 }

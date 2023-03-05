@@ -2,15 +2,12 @@ package com.ant.little.service.msganswer.answerimpl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ant.little.common.constents.MemberTypeEnum;
 import com.ant.little.common.constents.WxMsgTypeEnum;
 import com.ant.little.common.model.Response;
 import com.ant.little.common.util.DateUtil;
-import com.ant.little.model.dto.MemberConfigDTO;
 import com.ant.little.model.dto.RequestCounterDTO;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
-import com.ant.little.service.member.MemberService;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
 import com.ant.little.service.store.RequestCounterService;
 import org.slf4j.Logger;
@@ -57,11 +54,12 @@ public class AddRequestNumAnswerService implements MsgAnswerBaseService {
         requestCounterDTO.setRequestKey(jsonObject.getString("requestKey"));
         requestCounterDTO.setType(jsonObject.getString("requestKey"));
         RequestCounterDTO queryResult = requestCounterService.query(requestCounterDTO);
-        if(queryResult != null) {
+        if (queryResult != null) {
             RequestCounterDTO update = new RequestCounterDTO();
             update.setId(queryResult.getId());
             update.setLimitNum(queryResult.getLimitNum() + 10);
             requestCounterService.updateById(update);
+            requestCounterService.invalidate(queryResult);
         }
         WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
         wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
