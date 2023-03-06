@@ -8,6 +8,7 @@ import com.ant.little.common.model.Response;
 import com.ant.little.common.util.DigitalUtil;
 import com.ant.little.model.dto.WxSubMsgDTO;
 import com.ant.little.model.dto.WxSubMsgResponseDTO;
+import com.ant.little.service.config.OldFunctionUserList;
 import com.ant.little.service.findmap.FindMapWayUtil;
 import com.ant.little.service.msganswer.MsgAnswerBaseService;
 import com.google.common.cache.Cache;
@@ -96,6 +97,12 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
 
     public Response<WxSubMsgResponseDTO> answer(WxSubMsgDTO wxSubMsgDTO) {
         try {
+            if (!OldFunctionUserList.isAllow(wxSubMsgDTO)) {
+                WxSubMsgResponseDTO wxSubMsgResponseDTO = wxSubMsgDTO.toResponse();
+                wxSubMsgResponseDTO.setMsgType(WxMsgTypeEnum.TEXT.getName());
+                wxSubMsgResponseDTO.setContent("请使用 菜单栏=>生存之路=>宝箱工具 ");
+                return Response.newSuccess(wxSubMsgResponseDTO);
+            }
             String content = wxSubMsgDTO.getContent();
             while (content.contains("  ")) {
                 content = content.replace("  ", " ");
