@@ -145,7 +145,7 @@ public class MoriGameBestWayAnswerService implements MsgAnswerBaseService {
     }
 
     private String dataProcess(String result, WxSubMsgDTO wxSubMsgDTO) {
-        if (!"wx_applet_best_way".equals(wxSubMsgDTO.getToUserName())) {
+        if ("gh_d578112e1577".equals(wxSubMsgDTO.getToUserName())) {
             result = "推荐使用小程序工具,菜单栏->生存之路->宝箱工具\n\n" + result;
         }
         result = result + "\n\n公众号:旺仔小蚂蚁";
