@@ -51,7 +51,7 @@ public class RequestCounterAndLimitService {
         }
         RequestCounterDTO requestCounterDTO1 = preCheck(requestCounterDTO);
         if (requestCounterDTO1.getRequestNum() >= requestCounterDTO1.getLimitNum()) {
-            String msg = String.format("该功能今日已调用%d次,达到上限,请明天再使用", requestCounterDTO1.getRequestNum());
+            String msg = String.format("该功能今日已调用%d次,达到上限,请在小程序点击增加次数按钮增加。或明天再使用", requestCounterDTO1.getRequestNum());
             return Response.newFailure(msg, "");
         }
         return Response.newSuccess("");
