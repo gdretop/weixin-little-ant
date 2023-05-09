@@ -29,13 +29,13 @@ public class RequestLogService {
         String env = envConfig.getCurEnv();
         requestLogDTO.setEnv(env);
         RequestLogDO requestLogDO = dto2DO(requestLogDTO);
-        int effect = requestLogDOMapper.insertSelective(requestLogDO);
-        if (effect == 1) {
+//        int effect = requestLogDOMapper.insertSelective(requestLogDO);
+//        if (effect == 1) {
             return Response.newSuccess(requestLogDTO);
-        } else {
-            logger.error("插入信息失败 {}", JSON.toJSONString(requestLogDTO));
-            return Response.newFailure("写入失败", "");
-        }
+//        } else {
+//            logger.error("插入信息失败 {}", JSON.toJSONString(requestLogDTO));
+//            return Response.newFailure("写入失败", "");
+//        }
     }
 
     private RequestLogDO dto2DO(RequestLogDTO requestLogDTO) {
