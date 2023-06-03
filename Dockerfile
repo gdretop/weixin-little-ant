@@ -16,7 +16,7 @@ COPY settings.xml pom.xml /app/
 RUN mvn -s /app/settings.xml -f /app/pom.xml clean package
 
 # 自定义镜像
-FROM ccr.ccs.tencentyun.com/little-ant/little-ant:basic1.0_221228
+FROM ccr.ccs.tencentyun.com/little-ant2/little-ant:basic1.0_221228
 COPY python /home/root/python
 COPY --from=build /app/target/*.jar /home/root/java
 EXPOSE 80
